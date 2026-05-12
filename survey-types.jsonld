@@ -181,7 +181,7 @@
         "answerClass": null
       },
       "ddi": {
-        "intrvl": "interval",
+        "intrvl": "discrete",
         "formatType": "character",
         "responseDomainType": "text"
       },
@@ -220,7 +220,7 @@
         "answerClass": null
       },
       "ddi": {
-        "intrvl": "interval",
+        "intrvl": "discrete",
         "formatType": "character",
         "responseDomainType": "text"
       },
@@ -262,7 +262,7 @@
         "answerClass": null
       },
       "ddi": {
-        "intrvl": "interval",
+        "intrvl": "discrete",
         "formatType": "character",
         "responseDomainType": "text"
       },
@@ -417,7 +417,7 @@
         "answerClass": "A"
       },
       "ddi": {
-        "intrvl": "ordinal",
+        "intrvl": "discrete",
         "formatType": "numeric",
         "responseDomainType": "category"
       },
@@ -557,9 +557,17 @@
       "@id": "type:end_group",
       "@type": "StructuralType",
       "skos:prefLabel": "Group (End)",
-      "xlsform": { "typeString": "end_group" },
-      "limesurvey": { "typeCode": null, "supported": true, "emitsGroupRow": false },
-      "pairedWith": { "@id": "type:begin_group" },
+      "xlsform": {
+        "typeString": "end_group"
+      },
+      "limesurvey": {
+        "typeCode": null,
+        "supported": true,
+        "emitsGroupRow": false
+      },
+      "pairedWith": {
+        "@id": "type:begin_group"
+      },
       "transformation": {
         "roundTripSafe": true,
         "lossless": true,
@@ -571,9 +579,16 @@
       "@id": "type:end_repeat",
       "@type": "StructuralType",
       "skos:prefLabel": "Repeat Group (End)",
-      "xlsform": { "typeString": "end_repeat" },
-      "limesurvey": { "typeCode": null, "supported": false },
-      "pairedWith": { "@id": "type:begin_repeat" },
+      "xlsform": {
+        "typeString": "end_repeat"
+      },
+      "limesurvey": {
+        "typeCode": null,
+        "supported": false
+      },
+      "pairedWith": {
+        "@id": "type:begin_repeat"
+      },
       "transformation": {
         "roundTripSafe": false,
         "lossless": false,
@@ -999,6 +1014,11 @@
         "warnings": [
           "Range/slider questions not supported by LimeSurvey TSV import"
         ]
+      },
+      "ddi": {
+        "intrvl": "contin",
+        "formatType": "numeric",
+        "responseDomainType": "numeric"
       }
     },
     {
@@ -1029,6 +1049,11 @@
         "warnings": [
           "Acknowledge type not supported by LimeSurvey TSV import"
         ]
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "numeric",
+        "responseDomainType": "text"
       }
     },
     {
@@ -1060,6 +1085,11 @@
         "warnings": [
           "External file choice lists not supported by LimeSurvey TSV import"
         ]
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "numeric",
+        "responseDomainType": "category"
       }
     },
     {
@@ -1091,6 +1121,11 @@
         "warnings": [
           "External file choice lists not supported by LimeSurvey TSV import"
         ]
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "numeric",
+        "responseDomainType": "multiple"
       }
     },
     {
@@ -1211,6 +1246,11 @@
         "skip": true,
         "dataColumns": 0,
         "dataStructure": "metadata-skipped"
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "character",
+        "responseDomainType": "text"
       }
     },
     {

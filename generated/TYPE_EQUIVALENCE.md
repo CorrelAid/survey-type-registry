@@ -13,12 +13,12 @@ This document shows how question types map across different formats in the CDL s
 | `decimal` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
 | `text` | `S` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `note` | `X` | `var[@intrvl='discrete']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
-| `date` | `D` | `var[@intrvl='interval']` | ✅ | single-column | — |
-| `time` | `D` | `var[@intrvl='interval']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
-| `datetime` | `D` | `var[@intrvl='interval']` | ✅ | single-column | — |
+| `date` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
+| `time` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
+| `datetime` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `select_one` | `L` | `var[@intrvl='discrete']` | ✅ | single-column | Choice code truncation can cause ambiguity if two codes share 5-char prefix |
 | `select_multiple` | `M` | `varGrp[@type='multipleResp']` | ⚠️ | multiple-binary-columns | Data structure fundamentally changes during transformation |
-| `rank` | `R` | `var[@intrvl='ordinal']` | ✅ | single-column | — |
+| `rank` | `R` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `calculate` | `*` | `var[@intrvl='discrete']` | ✅ | single-column | XPath expressions transpiled to ExpressionScript may not be fully equivalent |
 | `geopoint` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; xlsform2lstsv raises error |
 | `geotrace` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import |
@@ -33,10 +33,10 @@ This document shows how question types map across different formats in the CDL s
 | `phonenumber` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; use text with constraint regex |
 | `email` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; use text with constraint regex |
 | `csv-external` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | External CSV loading not supported by LimeSurvey TSV import |
-| `range` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Range/slider questions not supported by LimeSurvey TSV import |
-| `acknowledge` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Acknowledge type not supported by LimeSurvey TSV import |
-| `select_one_from_file` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
-| `select_multiple_from_file` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
+| `range` | `None` | `var[@intrvl='contin']` | ⚠️ | unsupported | Range/slider questions not supported by LimeSurvey TSV import |
+| `acknowledge` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | Acknowledge type not supported by LimeSurvey TSV import |
+| `select_one_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
+| `select_multiple_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
 
 ## Detailed Type Information
 
@@ -44,7 +44,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
+- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -164,7 +164,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `D`
-- **DDI:** `intrvl="interval"`, `formatType="character"`
+- **DDI:** `intrvl="discrete"`, `formatType="character"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -181,7 +181,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `D`
-- **DDI:** `intrvl="interval"`, `formatType="character"`
+- **DDI:** `intrvl="discrete"`, `formatType="character"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -394,7 +394,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
+- **DDI:** `intrvl="contin"`, `formatType="numeric"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -416,7 +416,7 @@ This document shows how question types map across different formats in the CDL s
 - **LimeSurvey:** Type `R`
   - Answer class: `A`
   - Supports 'other' option: ✅
-- **DDI:** `intrvl="ordinal"`, `formatType="numeric"`
+- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -465,7 +465,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
+- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -509,7 +509,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
+- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
@@ -568,7 +568,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `D`
-- **DDI:** `intrvl="interval"`, `formatType="character"`
+- **DDI:** `intrvl="discrete"`, `formatType="character"`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`

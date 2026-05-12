@@ -54,7 +54,7 @@ var TypeRegistry = map[string]TypeMapping{
     "date": {
         XLSForm:       "date",
         LimeSurvey:    "D",
-        DDIIntrvl:     "interval",
+        DDIIntrvl:     "discrete",
         DDIFormatType: "character",
         ResponseDomain: "text",
         RoundTripSafe: true,
@@ -63,7 +63,7 @@ var TypeRegistry = map[string]TypeMapping{
     "time": {
         XLSForm:       "time",
         LimeSurvey:    "D",
-        DDIIntrvl:     "interval",
+        DDIIntrvl:     "discrete",
         DDIFormatType: "character",
         ResponseDomain: "text",
         RoundTripSafe: true,
@@ -72,7 +72,7 @@ var TypeRegistry = map[string]TypeMapping{
     "datetime": {
         XLSForm:       "datetime",
         LimeSurvey:    "D",
-        DDIIntrvl:     "interval",
+        DDIIntrvl:     "discrete",
         DDIFormatType: "character",
         ResponseDomain: "text",
         RoundTripSafe: true,
@@ -99,7 +99,7 @@ var TypeRegistry = map[string]TypeMapping{
     "rank": {
         XLSForm:       "rank",
         LimeSurvey:    "R",
-        DDIIntrvl:     "ordinal",
+        DDIIntrvl:     "discrete",
         DDIFormatType: "numeric",
         ResponseDomain: "category",
         RoundTripSafe: true,

@@ -99,12 +99,20 @@ def generate_typescript(registry: dict[str, Any], output: Path):
     output.write_text("\n".join(lines))
 
 def _is_supported_question(data: dict) -> bool:
+    """LimeSurvey TSV emittable (xlsform2lstsv perspective)."""
     if data.get("@type") != "QuestionType":
         return False
     ls = data.get("limesurvey", {})
     if ls.get("supported") is False:
         return False
     return ls.get("typeCode") is not None
+
+def _is_ddi_emittable(data: dict) -> bool:
+    """DDI XML emittable (survey2ddi perspective). True iff entry has a ddi.intrvl."""
+    if data.get("@type") not in ("QuestionType", "MetadataType"):
+        return False
+    ddi = data.get("ddi", {})
+    return bool(ddi.get("intrvl"))
 
 def generate_python(registry: dict[str, Any], output: Path):
     """Generate Python type mappings for survey2ddi."""
@@ -121,8 +129,10 @@ def generate_python(registry: dict[str, Any], output: Path):
         "TYPE_MAP: dict[str, str] = {",
     ]
 
+    # TYPE_MAP includes ALL QuestionType entries (LS-unsupported types like `range`
+    # are still DDI-emittable for survey2ddi). Aliases map to canonical slug.
     for type_id, data in registry.items():
-        if not _is_supported_question(data):
+        if data.get("@type") != "QuestionType":
             continue
 
         xlsform = data["xlsform"]["typeString"]
@@ -151,14 +161,24 @@ def generate_python(registry: dict[str, Any], output: Path):
             lines.append(f'    "{data["xlsform"]["typeString"]}",')
     lines.append("}")
     lines.append("")
-    lines.append("# Standardized type → (intrvl, format_type)")
+    lines.append("# Structural types (begin_group, end_group, begin_repeat, end_repeat)")
+    lines.append("STRUCTURAL_TYPES: set[str] = {")
+    for type_id, data in registry.items():
+        if data.get("@type") != "StructuralType":
+            continue
+        xls = data.get("xlsform", {}).get("typeString")
+        if xls:
+            lines.append(f'    "{xls}",')
+    lines.append("}")
+    lines.append("")
+    lines.append("# Standardized type → (intrvl, format_type). Filter: DDI-emittable (has ddi.intrvl).")
     lines.append("DDI_TYPE_MAP: dict[str, tuple[str, str]] = {")
 
     for type_id, data in registry.items():
-        if not _is_supported_question(data):
+        if not _is_ddi_emittable(data):
             continue
 
-        ddi = data.get("ddi", {})
+        ddi = data["ddi"]
         intrvl = ddi.get("intrvl", "discrete")
         fmt_type = ddi.get("formatType", "character")
         lines.append(f'    "{_slug(type_id)}": ("{intrvl}", "{fmt_type}"),')
@@ -166,20 +186,34 @@ def generate_python(registry: dict[str, Any], output: Path):
     lines.append("}")
     lines.append("")
 
+    lines.append("# Standardized type → responseDomainType for <qstn>")
+    lines.append("RESPONSE_DOMAIN_MAP: dict[str, str] = {")
+    for type_id, data in registry.items():
+        if not _is_ddi_emittable(data):
+            continue
+        rd = data["ddi"].get("responseDomainType")
+        if rd:
+            lines.append(f'    "{_slug(type_id)}": "{rd}",')
+    lines.append("}")
+    lines.append("")
+
     lines.append("# Standardized type → measurement level")
     lines.append("MEASURE_MAP: dict[str, str] = {")
 
     for type_id, data in registry.items():
-        if not _is_supported_question(data):
+        if not _is_ddi_emittable(data):
             continue
 
         ddi = data.get("ddi", {})
         # Try to derive measurement level from intrvl
         intrvl = ddi.get("intrvl", "")
-        if intrvl == "nominal" or (intrvl == "discrete" and data["xlsform"]["typeString"] in ["select_one", "select_multiple"]):
+        xls = data["xlsform"]["typeString"]
+        if intrvl == "nominal" or (intrvl == "discrete" and xls in ["select_one", "select_multiple", "select_one_from_file", "select_multiple_from_file"]):
             measure = "nominal"
-        elif intrvl == "ordinal" or data["xlsform"]["typeString"] == "rank":
+        elif intrvl == "ordinal" or xls == "rank":
             measure = "ordinal"
+        elif xls in ("date", "time", "datetime"):
+            measure = "interval"
         elif intrvl == "interval":
             measure = "interval"
         elif intrvl == "contin":
