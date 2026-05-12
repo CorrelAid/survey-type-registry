@@ -1,0 +1,70 @@
+{
+  "$comment": "GENERATED - DO NOT EDIT. Source: survey-types.jsonld",
+  "conventions": {
+    "other": {
+      "companionSuffix": "_other",
+      "companionType": "text",
+      "relevanceTemplate": "${{${name}}} = 'other'",
+      "choiceCode": "other",
+      "appliesTo": [
+        "select_one",
+        "select_multiple"
+      ]
+    },
+    "sanitization": {
+      "name": {
+        "maxLength": 20,
+        "stripCharsRegex": "[_-]",
+        "pattern": "^[a-zA-Z0-9]+$",
+        "dedupStrategy": "numeric-suffix"
+      },
+      "choiceCode": {
+        "maxLength": 5,
+        "stripCharsRegex": "[_-]",
+        "pattern": "^[a-zA-Z0-9]+$"
+      }
+    }
+  },
+  "xlsformColumnMap": [
+    {
+      "xlsform": "required",
+      "lsTsv": "mandatory",
+      "transform": "yes→Y, no→N or empty"
+    },
+    {
+      "xlsform": "constraint",
+      "lsTsv": "em_validation_q",
+      "transform": "XPath → LimeSurvey EM expression"
+    },
+    {
+      "xlsform": "constraint_message",
+      "lsTsv": "validation",
+      "transform": "passthrough"
+    },
+    {
+      "xlsform": "default",
+      "lsTsv": "default",
+      "transform": "passthrough"
+    },
+    {
+      "xlsform": "relevant",
+      "lsTsv": "relevance",
+      "transform": "XPath → LimeSurvey EM expression"
+    },
+    {
+      "xlsform": "label",
+      "lsTsv": "text",
+      "transform": "Markdown → HTML; ${var} → {name}"
+    },
+    {
+      "xlsform": "hint",
+      "lsTsv": "help",
+      "transform": "Markdown → HTML; ${var} → {name}"
+    },
+    {
+      "xlsform": "name",
+      "lsTsv": "name",
+      "transform": "sanitize per convention:sanitization"
+    }
+  ]
+}
