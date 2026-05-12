@@ -8,7 +8,11 @@ from typing import Literal
 
 # XLSForm type → standardized type
 TYPE_MAP: dict[str, str] = {
+    "integer": "integer",
+    "int": "integer",
     "decimal": "decimal",
+    "text": "text",
+    "string": "text",
     "note": "note",
     "date": "date",
     "time": "time",
@@ -53,7 +57,9 @@ UNSUPPORTED_TYPES: set[str] = {
 
 # Standardized type → (intrvl, format_type)
 DDI_TYPE_MAP: dict[str, tuple[str, str]] = {
+    "integer": ("contin", "numeric"),
     "decimal": ("contin", "numeric"),
+    "text": ("discrete", "character"),
     "note": ("discrete", "character"),
     "date": ("interval", "character"),
     "time": ("interval", "character"),
@@ -66,6 +72,7 @@ DDI_TYPE_MAP: dict[str, tuple[str, str]] = {
 
 # Standardized type → measurement level
 MEASURE_MAP: dict[str, str] = {
+    "integer": "ratio",
     "decimal": "ratio",
     "date": "interval",
     "time": "interval",

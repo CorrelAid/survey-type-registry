@@ -16,9 +16,29 @@ export interface TypeMapping {
 }
 
 export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
+  integer: {
+    kind: "question",
+    limeSurveyType: "N",
+    supported: true,
+  },
+  int: {
+    kind: "question",
+    limeSurveyType: "N",
+    supported: true,
+  },
   decimal: {
     kind: "question",
     limeSurveyType: "N",
+    supported: true,
+  },
+  text: {
+    kind: "question",
+    limeSurveyType: "S",
+    supported: true,
+  },
+  string: {
+    kind: "question",
+    limeSurveyType: "S",
     supported: true,
   },
   note: {
@@ -61,6 +81,7 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     kind: "question",
     limeSurveyType: "R",
     supported: true,
+    supportsOther: true,
     answerClass: "A",
     requiresListName: true,
   },
@@ -75,6 +96,16 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     supported: false,
   },
   begin_repeat: {
+    kind: "structural",
+    limeSurveyType: null,
+    supported: false,
+  },
+  end_group: {
+    kind: "structural",
+    limeSurveyType: null,
+    supported: true,
+  },
+  end_repeat: {
     kind: "structural",
     limeSurveyType: null,
     supported: false,
@@ -94,7 +125,7 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     limeSurveyType: null,
     supported: false,
   },
-  start-geopoint: {
+  "start-geopoint": {
     kind: "question",
     limeSurveyType: null,
     supported: false,
@@ -119,7 +150,7 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     limeSurveyType: null,
     supported: false,
   },
-  background-audio: {
+  "background-audio": {
     kind: "question",
     limeSurveyType: null,
     supported: false,
@@ -139,7 +170,7 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     limeSurveyType: null,
     supported: false,
   },
-  csv-external: {
+  "csv-external": {
     kind: "question",
     limeSurveyType: null,
     supported: false,

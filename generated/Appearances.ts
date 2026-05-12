@@ -23,7 +23,7 @@ export const APPEARANCES: Record<string, AppearanceSpec> = {
   "multiline": {
     supported: true,
     behavior: "handled",
-    validForTypes: ["text"],
+    validForTypes: ["text", "string"],
     lsEffect: "Override LS type from S to T",
     lsTypeOverride: "T",
   },

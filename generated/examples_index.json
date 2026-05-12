@@ -1,56 +1,6 @@
 {
   "variants": [
     {
-      "id": "integer",
-      "answerType": "integer",
-      "label": "Offene Zahl — Alter",
-      "concept": {
-        "openness": "open",
-        "cardinality": "single",
-        "dataNature": "numeric"
-      },
-      "presentation": {
-        "withOther": false,
-        "withLongList": false
-      },
-      "broader": "type:integer",
-      "xlsform": {
-        "survey": [
-          {
-            "type": "integer",
-            "name": "alter",
-            "label": "Wie alt sind Sie?"
-          }
-        ],
-        "choices": []
-      }
-    },
-    {
-      "id": "text",
-      "answerType": "text",
-      "label": "Offener Text — Anmerkungen",
-      "concept": {
-        "openness": "open",
-        "cardinality": "single",
-        "dataNature": "text"
-      },
-      "presentation": {
-        "withOther": false,
-        "withLongList": false
-      },
-      "broader": "type:text",
-      "xlsform": {
-        "survey": [
-          {
-            "type": "text",
-            "name": "anmerkungen",
-            "label": "Haben Sie weitere Anmerkungen?"
-          }
-        ],
-        "choices": []
-      }
-    },
-    {
       "id": "single_choice",
       "answerType": "single_choice",
       "label": "Single Choice — Bildungsgrad",
@@ -357,6 +307,56 @@
             "label": "Vollständig"
           }
         ]
+      }
+    },
+    {
+      "id": "integer",
+      "answerType": "integer",
+      "label": "Offene Zahl — Alter",
+      "concept": {
+        "openness": "open",
+        "cardinality": "single",
+        "dataNature": "numeric"
+      },
+      "presentation": {
+        "withOther": false,
+        "withLongList": false
+      },
+      "broader": "type:integer",
+      "xlsform": {
+        "survey": [
+          {
+            "type": "integer",
+            "name": "alter",
+            "label": "Wie alt sind Sie?"
+          }
+        ],
+        "choices": []
+      }
+    },
+    {
+      "id": "text",
+      "answerType": "text",
+      "label": "Offener Text — Anmerkungen",
+      "concept": {
+        "openness": "open",
+        "cardinality": "single",
+        "dataNature": "text"
+      },
+      "presentation": {
+        "withOther": false,
+        "withLongList": false
+      },
+      "broader": "type:text",
+      "xlsform": {
+        "survey": [
+          {
+            "type": "text",
+            "name": "anmerkungen",
+            "label": "Haben Sie weitere Anmerkungen?"
+          }
+        ],
+        "choices": []
       }
     }
   ]

@@ -15,12 +15,30 @@ type TypeMapping struct {
 }
 
 var TypeRegistry = map[string]TypeMapping{
+    "integer": {
+        XLSForm:       "integer",
+        LimeSurvey:    "N",
+        DDIIntrvl:     "contin",
+        DDIFormatType: "numeric",
+        ResponseDomain: "numeric",
+        RoundTripSafe: true,
+        DataColumns:   "1",
+    },
     "decimal": {
         XLSForm:       "decimal",
         LimeSurvey:    "N",
         DDIIntrvl:     "contin",
         DDIFormatType: "numeric",
         ResponseDomain: "numeric",
+        RoundTripSafe: true,
+        DataColumns:   "1",
+    },
+    "text": {
+        XLSForm:       "text",
+        LimeSurvey:    "S",
+        DDIIntrvl:     "discrete",
+        DDIFormatType: "character",
+        ResponseDomain: "text",
         RoundTripSafe: true,
         DataColumns:   "1",
     },

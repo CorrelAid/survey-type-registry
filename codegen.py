@@ -13,19 +13,28 @@ Generates:
 """
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
+_IDENT_RE = re.compile(r"^[A-Za-z_$][A-Za-z0-9_$]*$")
+
+def _ts_key(name: str) -> str:
+    """Quote TS object keys when they contain non-identifier chars."""
+    return name if _IDENT_RE.match(name) else json.dumps(name)
+
+def _slug(at_id: str) -> str:
+    """Strip namespace prefix from @id: 'type:integer' -> 'integer'."""
+    return at_id.split(":", 1)[1] if ":" in at_id else at_id
+
 def load_registry(path: Path) -> dict[str, Any]:
-    """Load and parse JSON-LD registry."""
+    """Load and parse JSON-LD registry. Keyed by full @id to avoid namespace collision."""
     with open(path) as f:
         data = json.load(f)
 
-    # Flatten @graph to dict keyed by @id
     registry = {}
     for item in data.get("@graph", []):
-        type_id = item["@id"].split(":")[-1]  # "type:integer" -> "integer"
-        registry[type_id] = item
+        registry[item["@id"]] = item
     return registry
 
 def generate_typescript(registry: dict[str, Any], output: Path):
@@ -58,7 +67,7 @@ def generate_typescript(registry: dict[str, Any], output: Path):
         # If typeCode missing and not explicitly supported=true, treat as unsupported
         if ls.get("typeCode") is None and "supported" not in ls:
             supported = False
-        lines.append(f"  {name}: {{")
+        lines.append(f"  {_ts_key(name)}: {{")
         lines.append(f"    kind: {json.dumps(kind)},")
         lines.append(f"    limeSurveyType: {json.dumps(ls.get('typeCode'))},")
         lines.append(f"    supported: {'true' if supported else 'false'},")
@@ -117,11 +126,11 @@ def generate_python(registry: dict[str, Any], output: Path):
             continue
 
         xlsform = data["xlsform"]["typeString"]
-        # For survey2ddi, we use the canonical type_id
-        lines.append(f'    "{xlsform}": "{type_id}",')
+        canon = _slug(type_id)  # "type:integer" -> "integer"
+        lines.append(f'    "{xlsform}": "{canon}",')
 
         for alias in data["xlsform"].get("aliases", []):
-            lines.append(f'    "{alias}": "{type_id}",')
+            lines.append(f'    "{alias}": "{canon}",')
 
     lines.append("}")
     lines.append("")
@@ -152,7 +161,7 @@ def generate_python(registry: dict[str, Any], output: Path):
         ddi = data.get("ddi", {})
         intrvl = ddi.get("intrvl", "discrete")
         fmt_type = ddi.get("formatType", "character")
-        lines.append(f'    "{type_id}": ("{intrvl}", "{fmt_type}"),')
+        lines.append(f'    "{_slug(type_id)}": ("{intrvl}", "{fmt_type}"),')
 
     lines.append("}")
     lines.append("")
@@ -178,7 +187,7 @@ def generate_python(registry: dict[str, Any], output: Path):
         else:
             continue  # No measure for this type
 
-        lines.append(f'    "{type_id}": "{measure}",')
+        lines.append(f'    "{_slug(type_id)}": "{measure}",')
 
     lines.append("}")
     lines.append("")
@@ -407,6 +416,27 @@ def generate_appearances(registry: dict[str, Any], output: Path):
         "",
         "export const APPEARANCES: Record<string, AppearanceSpec> = {",
     ]
+    # Build alias map: typeString -> [typeString, ...aliases]
+    alias_map: dict[str, list[str]] = {}
+    for data in registry.values():
+        if data.get("@type") != "QuestionType":
+            continue
+        xls = data.get("xlsform", {})
+        primary = xls.get("typeString")
+        if not primary:
+            continue
+        alias_map[primary] = [primary] + list(xls.get("aliases", []))
+
+    def expand_types(types: list[str]) -> list[str]:
+        out: list[str] = []
+        seen: set[str] = set()
+        for t in types:
+            for x in alias_map.get(t, [t]):
+                if x not in seen:
+                    seen.add(x)
+                    out.append(x)
+        return out
+
     for type_id, data in registry.items():
         if data.get("@type") != "Appearance":
             continue
@@ -415,7 +445,8 @@ def generate_appearances(registry: dict[str, Any], output: Path):
         lines.append(f"    supported: {'true' if data['supported'] else 'false'},")
         lines.append(f"    behavior: {json.dumps(data['behavior'])},")
         if data.get("validForTypes"):
-            lines.append(f"    validForTypes: {json.dumps(data['validForTypes'])},")
+            expanded = expand_types(data["validForTypes"])
+            lines.append(f"    validForTypes: {json.dumps(expanded)},")
         lines.append(f"    lsEffect: {json.dumps(data['lsEffect'])},")
         if data.get("lsTypeOverride"):
             lines.append(f"    lsTypeOverride: {json.dumps(data['lsTypeOverride'])},")

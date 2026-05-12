@@ -9,7 +9,9 @@ This document shows how question types map across different formats in the CDL s
 
 | XLSForm | LimeSurvey | DDI | Round-trip Safe | Data Structure | Key Warnings |
 |---------|------------|-----|-----------------|----------------|--------------|
+| `integer` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
 | `decimal` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
+| `text` | `S` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `note` | `X` | `var[@intrvl='discrete']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
 | `date` | `D` | `var[@intrvl='interval']` | ✅ | single-column | — |
 | `time` | `D` | `var[@intrvl='interval']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
@@ -329,6 +331,25 @@ This document shows how question types map across different formats in the CDL s
 
 ---
 
+### Integer (`integer`)
+
+**Aliases:** `int`
+
+**Platform Mappings:**
+- **LimeSurvey:** Type `N`
+- **DDI:** `intrvl="contin"`, `formatType="numeric"`
+
+**Constraints:**
+- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
+
+**Transformation:**
+- Round-trip safe: ✅ Yes
+- Lossless: ✅ Yes
+- Data columns: 1
+- Data structure: single-column
+
+---
+
 ### Note (Display Text) (`note`)
 
 **Platform Mappings:**
@@ -394,6 +415,7 @@ This document shows how question types map across different formats in the CDL s
 **Platform Mappings:**
 - **LimeSurvey:** Type `R`
   - Answer class: `A`
+  - Supports 'other' option: ✅
 - **DDI:** `intrvl="ordinal"`, `formatType="numeric"`
 
 **Constraints:**
@@ -523,6 +545,25 @@ This document shows how question types map across different formats in the CDL s
 
 ---
 
+### Text (Short Free Text) (`text`)
+
+**Aliases:** `string`
+
+**Platform Mappings:**
+- **LimeSurvey:** Type `S`
+- **DDI:** `intrvl="discrete"`, `formatType="character"`
+
+**Constraints:**
+- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
+
+**Transformation:**
+- Round-trip safe: ✅ Yes
+- Lossless: ✅ Yes
+- Data columns: 1
+- Data structure: single-column
+
+---
+
 ### Time (`time`)
 
 **Platform Mappings:**
@@ -593,5 +634,16 @@ These are not question types but affect survey structure:
 - ⚠️ Repeat groups not supported in LimeSurvey or DDI export
 - ⚠️ Variables inside begin_repeat/end_repeat are silently skipped
 - ⚠️ Requires different data model (nested arrays) not currently implemented
+
+---
+
+### Group (End) (`end_group`)
+
+
+---
+
+### Repeat Group (End) (`end_repeat`)
+
+⛔ **Not supported in LimeSurvey**
 
 ---

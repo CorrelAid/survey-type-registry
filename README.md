@@ -207,6 +207,23 @@ The semantic approach allows future enhancements:
 4. **Machine learning**: Train models to suggest types based on question text
 5. **Interactive tools**: Build web UIs that query the registry via SPARQL
 
+## Versioning & Release
+
+Downstream tools (xlsform2lstsv, survey2ddi, qwacback, wp_eins) consume `generated/` artifacts. Pin to either:
+
+- **Git tag** — e.g. `v0.1.0`. Recommended for production deployments.
+- **Commit SHA** — for trunk-following dev branches.
+
+Release workflow:
+1. Edit `survey-types.jsonld` and/or `survey-types-shapes.ttl`.
+2. Run `python codegen.py` — regenerates `generated/` (committed alongside source).
+3. Tag with semver: `git tag -a v0.X.Y -m "..." && git push --tags`.
+4. Downstream tools bump their pin.
+
+CI (`.github/workflows/ci.yml`) runs `scripts/check-drift.sh` on every PR, failing if `generated/` is stale relative to `codegen.py` / `survey-types.jsonld`. Local pre-commit users can add the same script as a `pre-commit` hook.
+
+Breaking changes (renamed/removed type, changed `kind`, changed `supported`): bump major. Additions only: bump minor. Doc/comment-only: bump patch.
+
 ## Related Tools
 
 - **[xlsform2lstsv](../xlsform2lstsv/)**: XLSForm → LimeSurvey TSV converter

@@ -413,7 +413,7 @@
       },
       "limesurvey": {
         "typeCode": "R",
-        "supportsOther": false,
+        "supportsOther": true,
         "answerClass": "A"
       },
       "ddi": {
@@ -551,6 +551,34 @@
           "Variables inside begin_repeat/end_repeat are silently skipped",
           "Requires different data model (nested arrays) not currently implemented"
         ]
+      }
+    },
+    {
+      "@id": "type:end_group",
+      "@type": "StructuralType",
+      "skos:prefLabel": "Group (End)",
+      "xlsform": { "typeString": "end_group" },
+      "limesurvey": { "typeCode": null, "supported": true, "emitsGroupRow": false },
+      "pairedWith": { "@id": "type:begin_group" },
+      "transformation": {
+        "roundTripSafe": true,
+        "lossless": true,
+        "dataColumns": 0,
+        "dataStructure": "none"
+      }
+    },
+    {
+      "@id": "type:end_repeat",
+      "@type": "StructuralType",
+      "skos:prefLabel": "Repeat Group (End)",
+      "xlsform": { "typeString": "end_repeat" },
+      "limesurvey": { "typeCode": null, "supported": false },
+      "pairedWith": { "@id": "type:begin_repeat" },
+      "transformation": {
+        "roundTripSafe": false,
+        "lossless": false,
+        "dataColumns": 0,
+        "dataStructure": "nested-arrays-not-supported"
       }
     },
     {
