@@ -10,6 +10,12 @@ dependencies = []
 dev = [
     "ruff>=0.8.0",
     "pytest>=8.0",
+    # XSD validation of blessed example fixtures (DDI 2.5).
+    # Schematron rules in schemas/schematron/ are committed but NOT validated in
+    # Python tests yet — they use queryBinding="xpath2" + fn:current() which
+    # neither lxml's isoschematron (xpath1 only) nor pyschematron's elementpath
+    # support. qwacback's Java schematron-worker handles enforcement in prod.
+    "lxml>=5.0",
     # Conformance tests (Tier 1): import the actual downstream consumer.
     # Pin to main until survey2ddi tags a release that consumes the registry.
     "survey2ddi @ git+https://github.com/CorrelAid/survey2ddi.git@main",
