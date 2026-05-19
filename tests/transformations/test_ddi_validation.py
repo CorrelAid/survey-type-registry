@@ -58,13 +58,71 @@ def test_ddi_snapshot_xsd_valid(variant, xsd_validator):
         )
 
 
-@pytest.mark.parametrize("variant", presentation_variants(), ids=lambda v: v["@id"])
-def test_ddi_snapshot_schematron(variant):
-    """Blessed ddi.xml SHOULD pass CDL schematron rules.
+import json
+import shutil
+import subprocess
 
-    Currently skipped: bundled schematron uses queryBinding='xpath2' + fn:current(),
-    which lxml.isoschematron (xpath1 only) and pyschematron (no fn:current) both
-    refuse. Enforcement happens in qwacback's Java schematron-worker. To wire it
-    here, replace fn:current() uses, drop to xpath1, or invoke saxon CLI.
+
+def _find_worker_jar() -> Path | None:
+    """Find the shadowJar built by workers/schematron-worker.
+
+    Build it first with:
+      cd workers/schematron-worker && ./gradlew shadowJar
+    Or use scripts/build-worker.sh.
     """
-    pytest.skip("schematron enforcement requires a saxon-based processor — TODO")
+    libs = REPO_ROOT / "workers" / "schematron-worker" / "build" / "libs"
+    if not libs.exists():
+        return None
+    for jar in libs.glob("*-all.jar"):
+        return jar
+    return None
+
+
+@pytest.fixture(scope="module")
+def worker_jar() -> Path:
+    jar = _find_worker_jar()
+    if jar is None:
+        pytest.skip(
+            "schematron-worker jar not built. "
+            "Run `bash scripts/build-worker.sh` (requires JDK 21)."
+        )
+    if shutil.which("java") is None:
+        pytest.skip("java not on PATH (need JDK 21 for schematron-worker)")
+    return jar
+
+
+@pytest.mark.parametrize("variant", presentation_variants(), ids=lambda v: v["@id"])
+def test_ddi_snapshot_schematron(variant, worker_jar):
+    """Blessed ddi.xml passes CDL schematron rules via schematron-worker CLI."""
+    snapshot = load_example_ddi(variant)
+    if snapshot is None:
+        pytest.skip(f"{variant['@id']}: no committed ddi.xml")
+
+    result = subprocess.run(
+        [
+            "java",
+            "-cp", str(worker_jar),
+            "dev.correlaid.schematron.CliMain",
+            "--sch", str(SCH_PATH),
+            "--xml", str(example_dir(variant) / "ddi.xml"),
+        ],
+        capture_output=True,
+        timeout=30,
+    )
+    if result.returncode == 0:
+        return  # valid
+    if result.returncode == 2:
+        pytest.fail(f"worker CLI argument/IO error: {result.stderr.decode()[:500]}")
+
+    # returncode == 1 → validation failures. Parse JSON for readable message.
+    try:
+        report = json.loads(result.stdout.decode())
+        msgs = "\n  ".join(
+            f"{e.get('rule', '?')}: {e.get('message', '?')}" for e in report.get("errors", [])
+        )
+    except Exception:
+        msgs = result.stdout.decode()[:500]
+    pytest.fail(
+        f"{variant['@id']}: schematron failed.\n  {msgs}\n"
+        f"Snapshot: {example_dir(variant) / 'ddi.xml'}"
+    )
