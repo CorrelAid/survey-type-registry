@@ -12,6 +12,35 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
       - name: Check generated/ in sync with codegen.py
         run: bash scripts/check-drift.sh
+
+  transformations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Checkout xlsform2lstsv (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: CorrelAid/xlsform2lstsv
+          path: ../xlsform2lstsv
+          # TODO: pin to a tag once xlsform2lstsv consumes the registry
+      - name: Build xlsform2lstsv
+        working-directory: ../xlsform2lstsv
+        run: |
+          npm ci
+          npm run build
+      - name: Install registry test deps
+        run: uv sync
+      - name: Run transformation tests
+        env:
+          XLSFORM2LSTSV_PATH: ${{ github.workspace }}/../xlsform2lstsv
+        run: uv run pytest tests/transformations/ -m "not docker" -v

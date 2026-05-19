@@ -1,0 +1,46 @@
+[project]
+name = "survey-type-registry"
+version = "0.1.0"
+description = "CDL survey type registry: JSON-LD source of truth + codegen for TS/Python/Go consumers."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.0",
+    "pytest>=8.0",
+    # Conformance tests (Tier 1): import the actual downstream consumer.
+    # Pin to main until survey2ddi tags a release that consumes the registry.
+    "survey2ddi @ git+https://github.com/CorrelAid/survey2ddi.git@main",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific
+]
+ignore = [
+    "E501",  # line too long (formatter handles)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "docker: requires docker-compose service (e.g. QWACBACK_URL set)",
+]
