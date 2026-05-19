@@ -1,0 +1,17 @@
+{
+  "id": "integer",
+  "variantId": "variant:integer",
+  "label": "Offene Zahl — Alter",
+  "answerType": "integer",
+  "exampleId": "integer",
+  "broader": "type:integer",
+  "concept": {
+    "openness": "open",
+    "cardinality": "single",
+    "dataNature": "numeric"
+  },
+  "presentation": {
+    "withOther": false,
+    "withLongList": false
+  }
+}

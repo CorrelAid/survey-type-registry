@@ -43,9 +43,32 @@ def presentation_variants() -> list[dict]:
 
 
 def load_example(variant: dict) -> dict:
-    """Load examples/<id>.xlsform.json referenced by a PresentationVariant."""
+    """Load the source xlsform.json from a PresentationVariant's example dir."""
     path = REPO_ROOT / variant["examplePath"]
     return json.loads(path.read_text())
+
+
+def example_dir(variant: dict) -> Path:
+    """examples/<id>/ for a PresentationVariant."""
+    return REPO_ROOT / variant["exampleDir"]
+
+
+def load_example_meta(variant: dict) -> dict:
+    """Load the registry-derived meta.json from the example dir."""
+    return json.loads((example_dir(variant) / "meta.json").read_text())
+
+
+def load_example_ddi(variant: dict) -> str | None:
+    """Return committed ddi.xml string or None if not generated for this variant."""
+    p = example_dir(variant) / "ddi.xml"
+    return p.read_text() if p.exists() else None
+
+
+def load_example_tsv(variant: dict) -> str | None:
+    """Return committed tsv.tsv string or None if xlsform2lstsv doesn't support
+    this variant's input types."""
+    p = example_dir(variant) / "tsv.tsv"
+    return p.read_text() if p.exists() else None
 
 
 def to_survey_rows(example: dict) -> tuple[list[dict], dict[str, list[dict]]]:

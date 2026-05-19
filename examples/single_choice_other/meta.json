@@ -1,0 +1,17 @@
+{
+  "id": "single_choice_other",
+  "variantId": "variant:single_choice_other",
+  "label": "Single Choice mit Sonstiges — Aufmerksamkeitsquelle",
+  "answerType": "single_choice",
+  "exampleId": "single_choice_other",
+  "broader": "type:select_one",
+  "concept": {
+    "openness": "semi-open",
+    "cardinality": "single",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "withOther": true,
+    "withLongList": false
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "multiple_choice_other",
+  "variantId": "variant:multiple_choice_other",
+  "label": "Multiple Choice mit Sonstiges — Gerätebesitz",
+  "answerType": "multiple_choice",
+  "exampleId": "multiple_choice_other",
+  "broader": "type:select_multiple",
+  "concept": {
+    "openness": "semi-open",
+    "cardinality": "multiple",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "withOther": true,
+    "withLongList": false
+  }
+}

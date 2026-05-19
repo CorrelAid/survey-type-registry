@@ -1,0 +1,18 @@
+{
+  "id": "multiple_choice_long_list",
+  "variantId": "variant:multiple_choice_long_list",
+  "label": "Multiple Choice (Lange Liste) — Besuchte Länder",
+  "answerType": "multiple_choice",
+  "exampleId": "multiple_choice_long_list",
+  "broader": "type:select_multiple",
+  "concept": {
+    "openness": "closed",
+    "cardinality": "multiple",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "appearance": "minimal",
+    "withOther": false,
+    "withLongList": true
+  }
+}

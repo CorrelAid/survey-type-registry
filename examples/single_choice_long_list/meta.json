@@ -1,0 +1,18 @@
+{
+  "id": "single_choice_long_list",
+  "variantId": "variant:single_choice_long_list",
+  "label": "Single Choice (Lange Liste) — Geburtsland",
+  "answerType": "single_choice",
+  "exampleId": "single_choice_long_list",
+  "broader": "type:select_one",
+  "concept": {
+    "openness": "closed",
+    "cardinality": "single",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "appearance": "minimal",
+    "withOther": false,
+    "withLongList": true
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "grid",
+  "variantId": "variant:grid",
+  "label": "Matrix / Likert-Skala — Institutionsvertrauen",
+  "answerType": "grid",
+  "exampleId": "grid",
+  "broader": "type:begin_group",
+  "concept": {
+    "openness": "closed",
+    "cardinality": "multiple",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "appearance": "table-list",
+    "withOther": false,
+    "withLongList": false
+  }
+}

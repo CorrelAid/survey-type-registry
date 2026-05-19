@@ -1,0 +1,17 @@
+{
+  "id": "text",
+  "variantId": "variant:text",
+  "label": "Offener Text — Anmerkungen",
+  "answerType": "text",
+  "exampleId": "text",
+  "broader": "type:text",
+  "concept": {
+    "openness": "open",
+    "cardinality": "single",
+    "dataNature": "text"
+  },
+  "presentation": {
+    "withOther": false,
+    "withLongList": false
+  }
+}

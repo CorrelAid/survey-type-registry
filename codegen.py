@@ -13,6 +13,7 @@ Generates:
 """
 
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -536,6 +537,151 @@ def generate_conventions(registry: dict[str, Any], output: Path):
     }
     output.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
 
+def build_example_artifacts(registry: dict[str, Any], base_dir: Path) -> dict[str, dict]:
+    """For each PresentationVariant, derive meta.json + xlsform.xlsx + ddi.xml (+ tsv.tsv
+    when xlsform2lstsv available) alongside the source xlsform.json.
+
+    Returns availability report keyed by variant id.
+    """
+    import subprocess
+    from xml.etree.ElementTree import tostring
+
+    report: dict[str, dict] = {}
+
+    # Optional deps for derived artifacts. Each is best-effort: missing = skip.
+    try:
+        import openpyxl  # noqa: F401
+        have_xlsx = True
+    except ImportError:
+        have_xlsx = False
+
+    try:
+        from survey2ddi_core.ddi_xml import build_ddi_xml  # noqa: F401
+        have_ddi = True
+    except ImportError:
+        have_ddi = False
+
+    node_driver = base_dir / "tests/transformations/_xlsform2lstsv_driver.mjs"
+    xlsform2lstsv_dist = base_dir / ".." / "xlsform2lstsv" / "dist" / "index.js"
+    pkg_env = os.environ.get("XLSFORM2LSTSV_PATH")
+    if pkg_env:
+        xlsform2lstsv_dist = Path(pkg_env) / "dist" / "index.js"
+    have_tsv = node_driver.exists() and xlsform2lstsv_dist.exists()
+
+    for type_id, data in registry.items():
+        if data.get("@type") != "PresentationVariant":
+            continue
+        ex_dir_rel = data.get("exampleDir")
+        if not ex_dir_rel:
+            continue
+        ex_dir = base_dir / ex_dir_rel
+        src = ex_dir / "xlsform.json"
+        if not src.exists():
+            continue
+
+        eid = ex_dir.name
+        rep = {"meta": False, "xlsx": False, "ddi": False, "tsv": False}
+        xlsform = json.loads(src.read_text())
+
+        # meta.json — registry-derived metadata
+        qw = data.get("qwacback", {})
+        meta = {
+            "id": eid,
+            "variantId": data["@id"],
+            "label": data.get("skos:prefLabel"),
+            "answerType": qw.get("answerType"),
+            "exampleId": qw.get("exampleId"),
+            "broader": data.get("skos:broader", {}).get("@id"),
+            "concept": data.get("concept", {}),
+            "presentation": data.get("presentation", {}),
+        }
+        (ex_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+        rep["meta"] = True
+
+        # xlsform.xlsx — write three sheets (survey, choices, settings)
+        if have_xlsx:
+            from openpyxl import Workbook
+            wb = Workbook()
+            ws_s = wb.active
+            ws_s.title = "survey"
+            survey_rows = xlsform.get("survey", [])
+            s_cols = sorted({k for r in survey_rows for k in r.keys()})
+            if not s_cols:
+                s_cols = ["type", "name", "label"]
+            ws_s.append(s_cols)
+            for r in survey_rows:
+                ws_s.append([r.get(c, "") for c in s_cols])
+
+            ws_c = wb.create_sheet("choices")
+            choices = xlsform.get("choices", [])
+            c_cols = sorted({k for r in choices for k in r.keys()})
+            if not c_cols:
+                c_cols = ["list_name", "name", "label"]
+            ws_c.append(c_cols)
+            for r in choices:
+                ws_c.append([r.get(c, "") for c in c_cols])
+
+            ws_set = wb.create_sheet("settings")
+            ws_set.append(["form_title", "form_id", "default_language"])
+            ws_set.append([meta.get("label", eid), eid, "default"])
+
+            wb.save(ex_dir / "xlsform.xlsx")
+            rep["xlsx"] = True
+
+        # ddi.xml — via survey2ddi
+        if have_ddi:
+            from survey2ddi_core.ddi_xml import build_ddi_xml
+            choices_by_list: dict[str, list[dict]] = {}
+            for c in xlsform.get("choices", []):
+                ln = c.get("list_name")
+                if not ln:
+                    continue
+                choices_by_list.setdefault(ln, []).append(
+                    {"name": c.get("name", ""), "label": c.get("label", "")}
+                )
+            try:
+                ddi_str = build_ddi_xml(
+                    asset_name=eid,
+                    survey_rows=xlsform.get("survey", []),
+                    choices_by_list=choices_by_list,
+                    settings={},
+                    submissions=[],
+                )
+                (ex_dir / "ddi.xml").write_text(ddi_str)
+                rep["ddi"] = True
+            except Exception as e:  # noqa: BLE001
+                rep["ddi_error"] = str(e)[:200]
+
+        # tsv.tsv — via xlsform2lstsv node subprocess
+        if have_tsv:
+            payload = {
+                "survey": xlsform.get("survey", []),
+                "choices": list(xlsform.get("choices", [])),
+                "settings": [],
+            }
+            try:
+                pkg_path = pkg_env or str((base_dir / ".." / "xlsform2lstsv").resolve())
+                env = {**os.environ, "XLSFORM2LSTSV_PATH": pkg_path}
+                proc = subprocess.run(
+                    ["node", str(node_driver)],
+                    input=json.dumps(payload).encode(),
+                    capture_output=True,
+                    timeout=20,
+                    env=env,
+                )
+                if proc.returncode == 0:
+                    (ex_dir / "tsv.tsv").write_bytes(proc.stdout)
+                    rep["tsv"] = True
+                else:
+                    rep["tsv_error"] = proc.stderr.decode()[:200]
+            except FileNotFoundError:
+                rep["tsv_error"] = "node not on PATH"
+
+        report[eid] = rep
+
+    return report
+
+
 def generate_examples_index(registry: dict[str, Any], base_dir: Path, output: Path):
     """Emit examples_index.json — flat list of presentation variants with embedded XLSForm payload."""
     index = []
@@ -595,6 +741,13 @@ if __name__ == "__main__":
 
     generate_conventions(registry, output_dir / "conventions.json")
     print("  ✅ conventions.json (for xlsform2lstsv)")
+
+    print("\nBuilding example artifacts (meta.json + xlsx + ddi.xml + tsv.tsv)...")
+    report = build_example_artifacts(registry, base_dir)
+    for eid, r in report.items():
+        flags = "".join(k[0] if r.get(k) else "-" for k in ("meta", "xlsx", "ddi", "tsv"))
+        errs = " ".join(f"{k}={v[:60]}" for k, v in r.items() if k.endswith("_error"))
+        print(f"  [{flags}] {eid}  {errs}")
 
     print("\n✨ Code generation complete!")
     print(f"\nNext steps:")

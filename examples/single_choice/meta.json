@@ -1,0 +1,17 @@
+{
+  "id": "single_choice",
+  "variantId": "variant:single_choice",
+  "label": "Single Choice — Bildungsgrad",
+  "answerType": "single_choice",
+  "exampleId": "single_choice",
+  "broader": "type:select_one",
+  "concept": {
+    "openness": "closed",
+    "cardinality": "single",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "withOther": false,
+    "withLongList": false
+  }
+}

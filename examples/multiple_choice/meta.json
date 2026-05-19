@@ -1,0 +1,17 @@
+{
+  "id": "multiple_choice",
+  "variantId": "variant:multiple_choice",
+  "label": "Multiple Choice — Wochenendtage",
+  "answerType": "multiple_choice",
+  "exampleId": "multiple_choice",
+  "broader": "type:select_multiple",
+  "concept": {
+    "openness": "closed",
+    "cardinality": "multiple",
+    "dataNature": "categorical"
+  },
+  "presentation": {
+    "withOther": false,
+    "withLongList": false
+  }
+}

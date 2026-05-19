@@ -1,0 +1,11 @@
+class	type/scale	name	relevance	text	help	language	validation	em_validation_q	mandatory	other	default	same_default	hidden
+S		language	1	en		en							
+S		format	1	A		en							
+S		shownoanswer	1	N		en							
+SL		surveyls_title	1	Untitled Survey		en							
+G		Questions	1	Questions		en							
+Q	L	aufmerksam	1	Wie sind Sie auf unser Angebot aufmerksam geworden?		en				Y			
+A		suchm		Suchmaschine		en							
+A		empfe		Persönliche Empfehlung		en							
+A		sozia		Soziale Medien		en							
+Q	S	aufmerksamother	aufmerksam == 'other'	Sonstiges (bitte angeben)		en							
