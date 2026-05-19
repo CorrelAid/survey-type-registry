@@ -207,8 +207,8 @@ dev = [
 
 [[package]]
 name = "survey2ddi"
-version = "0.3.0"
-source = { git = "https://github.com/CorrelAid/survey2ddi.git?rev=main#5272b430af8acfa556c70b1ae3d3486264a58329" }
+version = "0.4.0"
+source = { git = "https://github.com/CorrelAid/survey2ddi.git?rev=main#df6de26d0954b9fcfd503a17712e4f44dfef1aca" }
 dependencies = [
     { name = "httpx" },
     { name = "openpyxl" },

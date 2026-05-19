@@ -12,7 +12,7 @@ This document shows how question types map across different formats in the CDL s
 | `integer` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
 | `decimal` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
 | `text` | `S` | `var[@intrvl='discrete']` | ✅ | single-column | — |
-| `note` | `X` | `var[@intrvl='discrete']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
+| `note` | `X` | `var[@intrvl='']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
 | `date` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `time` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
 | `datetime` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
@@ -354,7 +354,7 @@ This document shows how question types map across different formats in the CDL s
 
 **Platform Mappings:**
 - **LimeSurvey:** Type `X`
-- **DDI:** `intrvl="discrete"`, `formatType="character"`
+- **DDI:** `intrvl=""`, `formatType=""`
 
 **Constraints:**
 - Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`

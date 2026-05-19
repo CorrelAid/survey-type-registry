@@ -45,9 +45,9 @@ var TypeRegistry = map[string]TypeMapping{
     "note": {
         XLSForm:       "note",
         LimeSurvey:    "X",
-        DDIIntrvl:     "discrete",
-        DDIFormatType: "character",
-        ResponseDomain: "text",
+        DDIIntrvl:     "",
+        DDIFormatType: "",
+        ResponseDomain: "",
         RoundTripSafe: true,
         DataColumns:   "0",
     },

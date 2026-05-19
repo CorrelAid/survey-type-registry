@@ -20,13 +20,5 @@
       <format>text/csv</format>
     </fileTxt>
   </fileDscr>
-  <dataDscr>
-    <var ID="V_geburtsland" name="geburtsland" intrvl="discrete" files="F1">
-      <qstn responseDomainType="category">
-        <qstnLit>In welchem Land wurden Sie geboren?</qstnLit>
-      </qstn>
-      <concept vocab="iso_3166_1">In welchem Land wurden Sie geboren?</concept>
-      <varFormat type="numeric" schema="other"/>
-    </var>
-  </dataDscr>
+  <dataDscr/>
 </codeBook>

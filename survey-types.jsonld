@@ -141,11 +141,6 @@
         "supportsOther": false,
         "answerClass": null
       },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "character",
-        "responseDomainType": "text"
-      },
       "kobo": {
         "nativeSupport": true
       },

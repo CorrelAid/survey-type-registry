@@ -49,8 +49,11 @@ METADATA_TYPES: set[str] = {
     "audit",
 }
 
-# XLSForm types that are recognized but unsupported in LimeSurvey TSV pipeline
-UNSUPPORTED_TYPES: set[str] = {
+# XLSForm types that are recognized but unsupported in LimeSurvey TSV pipeline.
+# DO NOT union into a DDI-side SKIP set — many of these types are DDI-emittable
+# (e.g. range, acknowledge, select_*_from_file). Use NON_DDI_EMITTABLE_TYPES for
+# DDI-emission skip logic instead.
+LS_UNSUPPORTED_TYPES: set[str] = {
     "geopoint",
     "geotrace",
     "geoshape",
@@ -70,6 +73,25 @@ UNSUPPORTED_TYPES: set[str] = {
     "select_multiple_from_file",
 }
 
+# XLSForm types that should be skipped during DDI emission (no ddi.intrvl set).
+# survey2ddi SKIP_TYPES = METADATA_TYPES | STRUCTURAL_TYPES | NON_DDI_EMITTABLE_TYPES.
+NON_DDI_EMITTABLE_TYPES: set[str] = {
+    "note",
+    "geopoint",
+    "geotrace",
+    "geoshape",
+    "start-geopoint",
+    "image",
+    "audio",
+    "video",
+    "file",
+    "background-audio",
+    "barcode",
+    "phonenumber",
+    "email",
+    "csv-external",
+}
+
 # Structural types (begin_group, end_group, begin_repeat, end_repeat)
 STRUCTURAL_TYPES: set[str] = {
     "begin_group",
@@ -83,7 +105,6 @@ DDI_TYPE_MAP: dict[str, tuple[str, str]] = {
     "integer": ("contin", "numeric"),
     "decimal": ("contin", "numeric"),
     "text": ("discrete", "character"),
-    "note": ("discrete", "character"),
     "date": ("discrete", "character"),
     "time": ("discrete", "character"),
     "datetime": ("discrete", "character"),
@@ -103,7 +124,6 @@ RESPONSE_DOMAIN_MAP: dict[str, str] = {
     "integer": "numeric",
     "decimal": "numeric",
     "text": "text",
-    "note": "text",
     "date": "text",
     "time": "text",
     "datetime": "text",

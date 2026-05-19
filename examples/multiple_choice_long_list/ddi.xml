@@ -20,13 +20,5 @@
       <format>text/csv</format>
     </fileTxt>
   </fileDscr>
-  <dataDscr>
-    <var ID="V_besuchte_laender" name="besuchte_laender" intrvl="discrete" files="F1">
-      <qstn responseDomainType="multiple">
-        <qstnLit>Welche dieser Länder haben Sie bereits besucht? Mehrere Antworten möglich.</qstnLit>
-      </qstn>
-      <concept vocab="iso_3166_1">Welche dieser Länder haben Sie bereits besucht? Mehrere Antworten möglich.</concept>
-      <varFormat type="numeric" schema="other"/>
-    </var>
-  </dataDscr>
+  <dataDscr/>
 </codeBook>

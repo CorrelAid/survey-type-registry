@@ -151,12 +151,25 @@ def generate_python(registry: dict[str, Any], output: Path):
         lines.append(f'    "{data["xlsform"]["typeString"]}",')
     lines.append("}")
     lines.append("")
-    lines.append("# XLSForm types that are recognized but unsupported in LimeSurvey TSV pipeline")
-    lines.append("UNSUPPORTED_TYPES: set[str] = {")
+    lines.append("# XLSForm types that are recognized but unsupported in LimeSurvey TSV pipeline.")
+    lines.append("# DO NOT union into a DDI-side SKIP set — many of these types are DDI-emittable")
+    lines.append("# (e.g. range, acknowledge, select_*_from_file). Use NON_DDI_EMITTABLE_TYPES for")
+    lines.append("# DDI-emission skip logic instead.")
+    lines.append("LS_UNSUPPORTED_TYPES: set[str] = {")
     for type_id, data in registry.items():
         if data.get("@type") != "QuestionType":
             continue
         if data.get("limesurvey", {}).get("supported") is False:
+            lines.append(f'    "{data["xlsform"]["typeString"]}",')
+    lines.append("}")
+    lines.append("")
+    lines.append("# XLSForm types that should be skipped during DDI emission (no ddi.intrvl set).")
+    lines.append("# survey2ddi SKIP_TYPES = METADATA_TYPES | STRUCTURAL_TYPES | NON_DDI_EMITTABLE_TYPES.")
+    lines.append("NON_DDI_EMITTABLE_TYPES: set[str] = {")
+    for type_id, data in registry.items():
+        if data.get("@type") != "QuestionType":
+            continue
+        if not data.get("ddi", {}).get("intrvl"):
             lines.append(f'    "{data["xlsform"]["typeString"]}",')
     lines.append("}")
     lines.append("")
