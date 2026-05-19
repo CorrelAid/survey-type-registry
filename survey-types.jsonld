@@ -1089,7 +1089,13 @@
       "ddi": {
         "intrvl": "discrete",
         "formatType": "numeric",
-        "responseDomainType": "category"
+        "responseDomainType": "category",
+        "externalCodeList": true,
+        "conceptVocabFrom": "filename"
+      },
+      "qwacback": {
+        "answerType": "single_choice",
+        "hasLongList": true
       }
     },
     {
@@ -1125,7 +1131,13 @@
       "ddi": {
         "intrvl": "discrete",
         "formatType": "numeric",
-        "responseDomainType": "multiple"
+        "responseDomainType": "multiple",
+        "externalCodeList": true,
+        "conceptVocabFrom": "filename"
+      },
+      "qwacback": {
+        "answerType": "multiple_choice",
+        "hasLongList": true
       }
     },
     {
@@ -1823,6 +1835,34 @@
           "transform": "sanitize per convention:sanitization"
         }
       ]
+    },
+    {
+      "@id": "vocab:iso_3166_1",
+      "@type": "Vocabulary",
+      "skos:prefLabel": "ISO 3166-1 country codes (alpha-2)",
+      "xlsformFilename": "iso_3166_1.csv",
+      "ddiVocab": "iso_3166_1",
+      "vocabURI": "https://www.iso.org/iso-3166-country-codes.html",
+      "standard": "ISO 3166-1",
+      "description": "Two-letter country codes (e.g. DE, FR, US)."
+    },
+    {
+      "@id": "convention:externalCodeList",
+      "@type": "GlobalConvention",
+      "skos:prefLabel": "External code list (long-list) pattern",
+      "rule": {
+        "xlsformTypePattern": "^select_(one|multiple)_from_file (?P<filename>[^ ]+\\.csv)$",
+        "ddiVocabFromFilename": "stripExtension",
+        "ddiEmission": "concept[@vocab='<vocab>'] in place of inline catgry; catgry MUST NOT be emitted",
+        "structuralNote": "select_multiple_from_file emits a flat <var> with concept/@vocab, NOT a varGrp[@type='multipleResp'] with binary children. This differs from select_multiple.",
+        "appliesTo": [
+          "select_one_from_file",
+          "select_multiple_from_file"
+        ],
+        "registeredVocabularies": [
+          "vocab:iso_3166_1"
+        ]
+      }
     }
   ]
 }

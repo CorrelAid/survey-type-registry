@@ -132,3 +132,21 @@ MEASURE_MAP: dict[str, str] = {
     "select_one_from_file": "nominal",
     "select_multiple_from_file": "nominal",
 }
+
+# External code list vocabularies referenced by select_*_from_file types.
+# Keyed by xlsform filename (e.g. 'iso_3166_1.csv').
+VOCABULARIES: dict[str, dict[str, str]] = {
+    "iso_3166_1.csv": {
+        "ddiVocab": "iso_3166_1",
+        "vocabURI": "https://www.iso.org/iso-3166-country-codes.html",
+        "standard": "ISO 3166-1",
+        "label": "ISO 3166-1 country codes (alpha-2)",
+    },
+}
+
+# XLSForm types that source choices from an external file (long-list pattern).
+# Emit DDI <concept vocab='X'> instead of inline <catgry> for these.
+EXTERNAL_CODELIST_TYPES: set[str] = {
+    "select_one_from_file",
+    "select_multiple_from_file",
+}

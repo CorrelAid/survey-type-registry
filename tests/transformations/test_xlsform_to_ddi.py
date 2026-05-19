@@ -13,6 +13,7 @@ import pytest
 
 from .drivers import (
     DDI_DRIVERS,
+    DDI_NS,
     DriverUnavailable,
     ddi_find,
     ddi_findall,
@@ -174,6 +175,41 @@ def test_example_other_pattern_group(ddi_driver, variant):
     assert other_groups, (
         f"{variant['@id']}: withOther=true but no <varGrp type='other'> emitted"
     )
+
+
+@pytest.mark.parametrize(
+    "variant",
+    [v for v in presentation_variants()
+     if v.get("presentation", {}).get("withLongList")],
+    ids=lambda v: v["@id"],
+)
+def test_long_list_concept_vocab(ddi_driver, variant):
+    """withLongList variants should reference the external vocab via <concept vocab='...'>.
+
+    Convention `convention:externalCodeList` (qwacback). survey2ddi may not yet
+    implement this; the test xfails for survey2ddi until it does.
+    """
+    example = load_example(variant)
+    survey, choices = to_survey_rows(example)
+    root = _safe_driver(ddi_driver, survey, choices)
+
+    # Expected vocab = filename stem of "select_X_from_file <filename>.csv"
+    raw_type = example["survey"][0]["type"]
+    parts = raw_type.split(None, 1)
+    if len(parts) < 2 or not parts[1].endswith(".csv"):
+        pytest.skip(f"cannot derive vocab from type {raw_type!r}")
+    expected_vocab = parts[1].removesuffix(".csv")
+
+    # Find any <concept vocab="...">
+    concepts = []
+    for path in (f".//{{{DDI_NS}}}concept", ".//concept"):
+        concepts.extend(root.iterfind(path))
+    matched = [c for c in concepts if c.get("vocab") == expected_vocab]
+    if not matched:
+        pytest.xfail(
+            f"{variant['@id']}: driver did not emit <concept vocab={expected_vocab!r}>. "
+            "Registry convention:externalCodeList not yet implemented in this driver."
+        )
 
 
 @pytest.mark.parametrize(

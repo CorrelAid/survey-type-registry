@@ -23,6 +23,19 @@
         "stripCharsRegex": "[_-]",
         "pattern": "^[a-zA-Z0-9]+$"
       }
+    },
+    "externalCodeList": {
+      "xlsformTypePattern": "^select_(one|multiple)_from_file (?P<filename>[^ ]+\\.csv)$",
+      "ddiVocabFromFilename": "stripExtension",
+      "ddiEmission": "concept[@vocab='<vocab>'] in place of inline catgry; catgry MUST NOT be emitted",
+      "structuralNote": "select_multiple_from_file emits a flat <var> with concept/@vocab, NOT a varGrp[@type='multipleResp'] with binary children. This differs from select_multiple.",
+      "appliesTo": [
+        "select_one_from_file",
+        "select_multiple_from_file"
+      ],
+      "registeredVocabularies": [
+        "vocab:iso_3166_1"
+      ]
     }
   },
   "xlsformColumnMap": [

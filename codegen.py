@@ -224,6 +224,37 @@ def generate_python(registry: dict[str, Any], output: Path):
     lines.append("}")
     lines.append("")
 
+    # External code list vocabularies (qwacback long-list pattern)
+    lines.append("# External code list vocabularies referenced by select_*_from_file types.")
+    lines.append("# Keyed by xlsform filename (e.g. 'iso_3166_1.csv').")
+    lines.append("VOCABULARIES: dict[str, dict[str, str]] = {")
+    for type_id, data in registry.items():
+        if data.get("@type") != "Vocabulary":
+            continue
+        fn = data.get("xlsformFilename")
+        if not fn:
+            continue
+        lines.append(f'    "{fn}": {{')
+        lines.append(f'        "ddiVocab": {json.dumps(data.get("ddiVocab", ""))},')
+        lines.append(f'        "vocabURI": {json.dumps(data.get("vocabURI", ""))},')
+        lines.append(f'        "standard": {json.dumps(data.get("standard", ""))},')
+        lines.append(f'        "label": {json.dumps(data.get("skos:prefLabel", ""))},')
+        lines.append("    },")
+    lines.append("}")
+    lines.append("")
+
+    # Long-list type → mark for emitting concept/@vocab instead of inline catgry
+    lines.append("# XLSForm types that source choices from an external file (long-list pattern).")
+    lines.append("# Emit DDI <concept vocab='X'> instead of inline <catgry> for these.")
+    lines.append("EXTERNAL_CODELIST_TYPES: set[str] = {")
+    for type_id, data in registry.items():
+        if data.get("@type") != "QuestionType":
+            continue
+        if data.get("ddi", {}).get("externalCodeList"):
+            lines.append(f'    "{data["xlsform"]["typeString"]}",')
+    lines.append("}")
+    lines.append("")
+
     output.write_text("\n".join(lines))
 
 def generate_go(registry: dict[str, Any], output: Path):
