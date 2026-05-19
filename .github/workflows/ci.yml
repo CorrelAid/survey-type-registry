@@ -27,14 +27,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Checkout xlsform2lstsv (sibling)
+      - name: Checkout xlsform2lstsv into subdir
         uses: actions/checkout@v4
         with:
           repository: CorrelAid/xlsform2lstsv
-          path: ../xlsform2lstsv
+          path: _xlsform2lstsv
           # TODO: pin to a tag once xlsform2lstsv consumes the registry
       - name: Build xlsform2lstsv
-        working-directory: ../xlsform2lstsv
+        working-directory: _xlsform2lstsv
         run: |
           npm ci
           npm run build
@@ -42,5 +42,5 @@ jobs:
         run: uv sync
       - name: Run transformation tests
         env:
-          XLSFORM2LSTSV_PATH: ${{ github.workspace }}/../xlsform2lstsv
+          XLSFORM2LSTSV_PATH: ${{ github.workspace }}/_xlsform2lstsv
         run: uv run pytest tests/transformations/ -m "not docker" -v
