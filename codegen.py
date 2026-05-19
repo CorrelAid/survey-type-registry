@@ -550,17 +550,19 @@ def generate_conventions(registry: dict[str, Any], output: Path):
     }
     output.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
 
-def build_example_artifacts(registry: dict[str, Any], base_dir: Path) -> dict[str, dict]:
-    """For each PresentationVariant, derive meta.json + xlsform.xlsx + ddi.xml (+ tsv.tsv
-    when xlsform2lstsv available) alongside the source xlsform.json.
+def build_example_artifacts(
+    registry: dict[str, Any],
+    base_dir: Path,
+    bless_snapshots: bool = False,
+) -> dict[str, dict]:
+    """For each PresentationVariant, derive registry-only artifacts (meta.json,
+    xlsform.xlsx) alongside the source xlsform.json.
 
-    Snapshots are also consumed by test_snapshots.py as expected output. For
-    drivers that share the same implementation as the snapshot generator
-    (survey2ddi → ddi.xml, xlsform2lstsv → tsv.tsv), the snapshot test is
-    tautological at a single moment in time, but it still catches drift
-    between commits (committed snapshot vs newly-regenerated). Multi-driver
-    tests (e.g. qwacback) consume the same snapshots and produce real
-    cross-tool signal.
+    Driver-derived snapshots (`ddi.xml`, `tsv.tsv`) are written ONLY when
+    `bless_snapshots=True`. Pass `--bless-snapshots` to codegen.py, or run
+    `scripts/bless-snapshots.sh`. Default codegen leaves them untouched so
+    `test_snapshots.py` compares the current driver against a stable, human-
+    blessed reference instead of regenerating against itself.
 
     Returns availability report keyed by variant id.
     """
@@ -574,10 +576,13 @@ def build_example_artifacts(registry: dict[str, Any], base_dir: Path) -> dict[st
     except ImportError:
         have_xlsx = False
 
-    try:
-        from survey2ddi_core.ddi_xml import build_ddi_xml  # noqa: F401
-        have_ddi = True
-    except ImportError:
+    if bless_snapshots:
+        try:
+            from survey2ddi_core.ddi_xml import build_ddi_xml  # noqa: F401
+            have_ddi = True
+        except ImportError:
+            have_ddi = False
+    else:
         have_ddi = False
 
     node_driver = base_dir / "tests/transformations/_xlsform2lstsv_driver.mjs"
@@ -585,7 +590,7 @@ def build_example_artifacts(registry: dict[str, Any], base_dir: Path) -> dict[st
     pkg_env = os.environ.get("XLSFORM2LSTSV_PATH")
     if pkg_env:
         xlsform2lstsv_dist = Path(pkg_env) / "dist" / "index.js"
-    have_tsv = node_driver.exists() and xlsform2lstsv_dist.exists()
+    have_tsv = bless_snapshots and node_driver.exists() and xlsform2lstsv_dist.exists()
 
     for type_id, data in registry.items():
         if data.get("@type") != "PresentationVariant":
@@ -730,6 +735,8 @@ def generate_examples_index(registry: dict[str, Any], base_dir: Path, output: Pa
         f.write("\n")
 
 if __name__ == "__main__":
+    import sys
+    bless = "--bless-snapshots" in sys.argv
     base_dir = Path(__file__).parent
     registry_path = base_dir / "survey-types.jsonld"
     output_dir = base_dir / "generated"
@@ -761,8 +768,10 @@ if __name__ == "__main__":
     generate_conventions(registry, output_dir / "conventions.json")
     print("  ✅ conventions.json (for xlsform2lstsv)")
 
-    print("\nBuilding example artifacts (meta.json + xlsx + ddi.xml + tsv.tsv)...")
-    report = build_example_artifacts(registry, base_dir)
+    print(f"\nBuilding example artifacts (meta.json + xlsx{' + ddi.xml + tsv.tsv' if bless else ''})...")
+    if not bless:
+        print("  [snapshots frozen — pass --bless-snapshots to regenerate ddi.xml + tsv.tsv]")
+    report = build_example_artifacts(registry, base_dir, bless_snapshots=bless)
     for eid, r in report.items():
         flags = "".join(k[0] if r.get(k) else "-" for k in ("meta", "xlsx", "ddi", "tsv"))
         errs = " ".join(f"{k}={v[:60]}" for k, v in r.items() if k.endswith("_error"))
