@@ -554,14 +554,20 @@ def build_example_artifacts(registry: dict[str, Any], base_dir: Path) -> dict[st
     """For each PresentationVariant, derive meta.json + xlsform.xlsx + ddi.xml (+ tsv.tsv
     when xlsform2lstsv available) alongside the source xlsform.json.
 
+    Snapshots are also consumed by test_snapshots.py as expected output. For
+    drivers that share the same implementation as the snapshot generator
+    (survey2ddi → ddi.xml, xlsform2lstsv → tsv.tsv), the snapshot test is
+    tautological at a single moment in time, but it still catches drift
+    between commits (committed snapshot vs newly-regenerated). Multi-driver
+    tests (e.g. qwacback) consume the same snapshots and produce real
+    cross-tool signal.
+
     Returns availability report keyed by variant id.
     """
     import subprocess
-    from xml.etree.ElementTree import tostring
 
     report: dict[str, dict] = {}
 
-    # Optional deps for derived artifacts. Each is best-effort: missing = skip.
     try:
         import openpyxl  # noqa: F401
         have_xlsx = True
