@@ -15,6 +15,7 @@ Generates:
 import json
 import os
 import re
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
@@ -556,9 +557,10 @@ def generate_appearances(registry: dict[str, Any], output: Path):
     output.write_text("\n".join(lines))
 
 def generate_conventions(registry: dict[str, Any], output: Path):
-    """Emit global conventions + column map as TS module."""
+    """Emit global conventions + column map + composites as JSON."""
     conv = {}
     col_map = []
+    composites = []
     for type_id, data in registry.items():
         t = data.get("@type")
         if t == "GlobalConvention":
@@ -566,10 +568,22 @@ def generate_conventions(registry: dict[str, Any], output: Path):
             conv[slug] = data.get("rule", {})
         elif t == "XLSFormColumnMap":
             col_map = data.get("map", [])
+        elif t == "Composite":
+            composites.append(OrderedDict([
+                ("id", data["@id"].split(":", 1)[1]),
+                ("label", data.get("skos:prefLabel")),
+                ("broader", data.get("skos:broader")),
+                ("trigger", data.get("trigger", {})),
+                ("input", data.get("input", {})),
+                ("output", data.get("output", {})),
+                ("schematronPatterns", data.get("schematronPatterns", [])),
+                ("notes", data.get("notes", [])),
+            ]))
     out = {
         "$comment": "GENERATED - DO NOT EDIT. Source: survey-types.jsonld",
         "conventions": conv,
         "xlsformColumnMap": col_map,
+        "composites": composites,
     }
     output.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
 

@@ -36,6 +36,78 @@
       "registeredVocabularies": [
         "vocab:iso_3166_1"
       ]
+    },
+    "surveySettings": {
+      "fields": [
+        {
+          "xlsformKey": "form_title",
+          "lsTsvRow": "SL surveyls_title",
+          "ddiPath": "stdyDscr/citation/titlStmt/titl",
+          "required": true
+        },
+        {
+          "xlsformKey": "form_id",
+          "lsTsvRow": null,
+          "ddiPath": "fileDscr/@ID",
+          "required": true
+        },
+        {
+          "xlsformKey": "default_language",
+          "lsTsvCell": "language column on every row",
+          "ddiPath": "fallback xml:lang on var/qstn elements",
+          "required": false
+        },
+        {
+          "xlsformKey": "version",
+          "lsTsvRow": null,
+          "ddiPath": "codeBook/@version (DDI version, not survey version — record survey version elsewhere)",
+          "required": false
+        },
+        {
+          "xlsformKey": "instance_name",
+          "lsTsvRow": null,
+          "ddiPath": "fileDscr/fileTxt/fileName",
+          "required": false
+        }
+      ],
+      "magicNames": [
+        {
+          "xlsformRow": "type=note + name=welcome",
+          "lsTsvRow": "SL surveyls_welcometext",
+          "ddiPath": "stdyDscr/stdyInfo/abstract (or notes)",
+          "note": "Body text from label promoted to survey-level intro. Convention only; opt-in via tool config."
+        },
+        {
+          "xlsformRow": "type=note + name=end",
+          "lsTsvRow": "SL surveyls_endtext",
+          "ddiPath": "—",
+          "note": "End-of-survey thank-you. LS-only."
+        }
+      ]
+    },
+    "languageTagging": {
+      "xlsformColumnPattern": "^(?P<base>label|hint|constraint_message|guidance_hint|media::image|media::audio|media::video)::(?P<lang>.+)$",
+      "xlsformLanguageList": {
+        "setting": "settings.default_language",
+        "fallback": "first language encountered in label columns",
+        "note": "Each language code SHOULD be a valid IETF BCP 47 tag (e.g. 'de', 'en', 'fr-BE'). Tools may warn on non-BCP47 codes."
+      },
+      "lsTsvHandling": {
+        "column": "language",
+        "emission": "one row per language per question — same name/type, different language column + text/help cells",
+        "baseLanguage": "first emitted; subsequent languages reference same question name"
+      },
+      "ddiHandling": {
+        "attribute": "xml:lang",
+        "appliesToElements": [
+          "txt",
+          "qstnLit",
+          "labl",
+          "preQTxt",
+          "postQTxt"
+        ],
+        "emission": "one child element per language with xml:lang attr"
+      }
     }
   },
   "xlsformColumnMap": [
@@ -78,6 +150,158 @@
       "xlsform": "name",
       "lsTsv": "name",
       "transform": "sanitize per convention:sanitization"
+    }
+  ],
+  "composites": [
+    {
+      "id": "multiple_response",
+      "label": "Multiple Response (binary fan-out)",
+      "broader": {
+        "@id": "type:select_multiple"
+      },
+      "trigger": {
+        "xlsformPattern": "single row, type='select_multiple <listname>'",
+        "applyTo": "the row itself"
+      },
+      "input": {
+        "rows": [
+          {
+            "role": "question",
+            "match": "type=select_multiple <listname>",
+            "cardinality": 1
+          }
+        ]
+      },
+      "output": {
+        "ddi": {
+          "container": "varGrp[@type='multipleResp']",
+          "containerAttrs": {
+            "name": "<question name>",
+            "var": "space-separated IDs of member binary vars"
+          },
+          "memberVars": "one <var> per choice, name=<qname>_<choicecode>, intrvl='discrete', responseDomainType='multiple', binary catgry codes 0/1",
+          "otherVariant": "if `or_other` flag present: parent varGrp[@type='other'] wraps the multipleResp group + a sibling _other text var; see convention:other"
+        },
+        "lsTsv": {
+          "row": "Q-class row, type/scale=M, answerClass=SQ",
+          "answerRows": "one A-class row per choice"
+        }
+      },
+      "schematronPatterns": [
+        "essentials",
+        "logic"
+      ],
+      "notes": []
+    },
+    {
+      "id": "grid",
+      "label": "Grid / Matrix Group",
+      "broader": [
+        {
+          "@id": "type:begin_group"
+        },
+        {
+          "@id": "type:select_one"
+        }
+      ],
+      "trigger": {
+        "xlsformPattern": "begin_group row with appearance=table-list (or name contains 'grid', or label contains 'matrix')",
+        "applyTo": "begin_group + all rows until matching end_group"
+      },
+      "input": {
+        "rows": [
+          {
+            "role": "header",
+            "match": "type=begin_group, appearance=table-list",
+            "cardinality": 1
+          },
+          {
+            "role": "item",
+            "match": "type=select_one <listname> — all items MUST share the same listname",
+            "cardinality": "1..*"
+          },
+          {
+            "role": "closer",
+            "match": "type=end_group",
+            "cardinality": 1
+          }
+        ]
+      },
+      "output": {
+        "ddi": {
+          "container": "varGrp[@type='grid']",
+          "containerAttrs": {
+            "name": "<group name>",
+            "var": "space-separated member IDs"
+          },
+          "memberVars": "one <var> per item row. Each var carries the full <catgry> set repeated (responseDomainType='category')."
+        },
+        "lsTsv": {
+          "headerRow": "F-type question (matrix header) with answerClass=A; answer codes from shared list",
+          "itemRows": "SQ-class rows, one per item",
+          "note": "LS represents the matrix as a single question with sub-questions; categories not re-emitted per row"
+        }
+      },
+      "schematronPatterns": [
+        "essentials",
+        "logic"
+      ],
+      "notes": [
+        "If `appearance=table-list` is absent, the group is flattened — children become top-level vars in DDI, group is lost.",
+        "Items SHOULD share the same `listname` so the matrix is rectangular."
+      ]
+    },
+    {
+      "id": "other_pattern",
+      "label": "Semi-open `or_other` pattern (companion text var)",
+      "broader": [
+        {
+          "@id": "type:select_one"
+        },
+        {
+          "@id": "type:select_multiple"
+        }
+      ],
+      "trigger": {
+        "xlsformPattern": "select_one|select_multiple row with `or_other` flag in type cell, immediately followed (or anywhere later in same scope) by a text row named `<basename>_other`",
+        "applyTo": "the base row + the `<basename>_other` companion row"
+      },
+      "input": {
+        "rows": [
+          {
+            "role": "base",
+            "match": "type=select_one|select_multiple <listname> or_other, name=<basename>",
+            "cardinality": 1
+          },
+          {
+            "role": "companion",
+            "match": "type=text, name=<basename>_other, relevant=${<basename>} = 'other'",
+            "cardinality": 1
+          }
+        ]
+      },
+      "output": {
+        "ddi": {
+          "container": "varGrp[@type='other']",
+          "containerAttrs": {
+            "name": "<basename>",
+            "var": "for single-choice: '<base_var_ID> <other_var_ID>'. For multiple-choice: var=<other_var_ID>, varGrp=<base_multipleResp_groupID>"
+          },
+          "childStructure": "single-choice: parent varGrp + base <var> + _other text <var>. multiple-choice: parent varGrp + child multipleResp varGrp (named <basename>_choices) + _other text <var> as SIBLING (NOT inside multipleResp's @var list)"
+        },
+        "lsTsv": {
+          "baseRow": "Q-class row with other='Y'",
+          "companionRow": "Q-class S-type row, relevance: '<basename> == \"other\"'"
+        }
+      },
+      "schematronPatterns": [
+        "other_variables"
+      ],
+      "notes": [
+        "Choice with code 'other' MUST exist in the base question's list.",
+        "For multiple_choice_other: the _other text var must NOT appear in the multipleResp group's @var attribute.",
+        "DDI→XLSForm direction reconstructs relevance from the parent varGrp[@type='other'] reference."
+      ]
     }
   ]
 }

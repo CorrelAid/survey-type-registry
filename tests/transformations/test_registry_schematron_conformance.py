@@ -63,6 +63,25 @@ def test_each_registry_concept_referenced_in_schematron():
     )
 
 
+def test_composite_schematron_pattern_ids_exist():
+    """Each Composite's `schematronPatterns` must list IDs present in the .sch file."""
+    import json as _json
+    from .fixtures import load_registry
+
+    sch_text = SCH_PATH.read_text()
+    available = set(re.findall(r'pattern id="([^"]+)"', sch_text))
+
+    composites = [e for e in load_registry() if e.get("@type") == "Composite"]
+    assert composites, "no Composite entries in registry — expected at least one"
+
+    errors = []
+    for c in composites:
+        for pid in c.get("schematronPatterns", []):
+            if pid not in available:
+                errors.append(f"{c['@id']}: references pattern {pid!r} which is NOT in {SCH_PATH.name}")
+    assert not errors, "Composite ↔ schematron pattern ID mismatch:\n  " + "\n  ".join(errors)
+
+
 # =============================================================================
 # (2) Mutation tests — assert schematron actually rejects contract violations
 # =============================================================================
