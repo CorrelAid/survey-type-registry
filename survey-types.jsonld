@@ -160,44 +160,6 @@
       }
     },
     {
-      "@id": "type:rank",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Rank Order",
-      "xlsform": {
-        "typeString": "rank",
-        "requiresListName": true
-      },
-      "limesurvey": {
-        "typeCode": "R",
-        "supportsOther": true,
-        "answerClass": "A"
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "numeric",
-        "responseDomainType": "category"
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$",
-        "maxChoiceCodeLength": 5
-      },
-      "transformation": {
-        "roundTripSafe": true,
-        "lossless": true,
-        "dataColumns": 1,
-        "dataStructure": "single-column"
-      },
-      "concept": {
-        "openness": "closed",
-        "cardinality": "multiple",
-        "dataNature": "ordinal"
-      }
-    },
-    {
       "@id": "type:calculate",
       "@type": "QuestionType",
       "skos:prefLabel": "Calculated Field",

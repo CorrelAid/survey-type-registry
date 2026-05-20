@@ -464,6 +464,46 @@
         "formatType": "numeric",
         "responseDomainType": "text"
       }
+    },
+    {
+      "@id": "type:rank",
+      "@type": "QuestionType",
+      "skos:prefLabel": "Rank Order",
+      "xlsform": {
+        "typeString": "rank",
+        "requiresListName": true
+      },
+      "limesurvey": {
+        "typeCode": "R",
+        "supportsOther": true,
+        "answerClass": "A"
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "numeric",
+        "responseDomainType": "category"
+      },
+      "kobo": {
+        "nativeSupport": true
+      },
+      "constraints": {
+        "maxNameLength": 20,
+        "namePattern": "^[a-zA-Z0-9]+$",
+        "maxChoiceCodeLength": 5
+      },
+      "transformation": {
+        "roundTripSafe": true,
+        "lossless": true,
+        "dataColumns": 1,
+        "dataStructure": "single-column"
+      },
+      "concept": {
+        "openness": "closed",
+        "cardinality": "multiple",
+        "dataNature": "ordinal"
+      },
+      "archiveReason": "Documented narratively in wp_eins (Antworttypen → Ranking) but never operationalized: no blessed example, no qwacback.answerType, no <QuestionTypeBlock> reference, no agreed cross-tool encoding (kobo stores 1 space-separated column; LimeSurvey type R stores N positional columns; DDI analyst expectation is N ordinal vars per item). Re-introduce as composite:rank when (a) cross-tool fan-out is implemented and (b) wp_eins gains a <QuestionTypeBlock> example.",
+      "archivedSince": "2026-05-20"
     }
   ]
 }

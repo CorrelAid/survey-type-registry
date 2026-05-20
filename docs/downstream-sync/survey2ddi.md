@@ -83,6 +83,24 @@ v0.5.0
 ```
 with release notes citing registry v1.0.0 and resolution of registry issue #2.
 
+### Phase 7 — drop `rank` support
+
+Registry v1.2.0+ archives `type:rank`. Reason: never operationalized cross-tool
+(kobo flat string vs LimeSurvey N columns vs DDI N ordinal vars — no
+agreement). After registry sync, `rank` will appear in
+`survey2ddi_core._generated.type_mappings.LS_UNSUPPORTED_TYPES` (or simply
+absent from `TYPE_MAP` if archived from the active set).
+
+Action:
+1. Verify `TYPE_MAP` after sync no longer contains `rank` (registry-driven, no
+   code change required if migration is clean).
+2. Search `survey2ddi_core/` for any literal `"rank"` reference and remove
+   (likely only in MEASURE_MAP or special-case branches in xlsform.py /
+   ddi_xml.py).
+3. Drop any test case asserting on rank-typed input. Add a regression test:
+   feeding a row with `type=rank …` produces a clear "unsupported type"
+   error/skip (not silent passthrough).
+
 ### Hard rules
 
 - DO NOT modify `../survey-type-registry`. Open issues / PRs upstream if changes needed.

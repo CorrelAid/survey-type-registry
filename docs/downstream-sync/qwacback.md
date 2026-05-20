@@ -115,6 +115,23 @@ Wire into existing CI as a separate job.
 - `docker-compose up --build` — schematron-worker boots, validation requests succeed
 - `gh pr create` — review the deletions of duplicated files
 
+### Phase 6 — drop `rank` support
+
+Registry v1.2.0+ archives `type:rank`. Reason: documented in wp_eins narrative
+but never operationalized cross-tool (kobo encodes as 1 space-separated column,
+LimeSurvey as N positional columns, DDI analyst expectation is N ordinal vars
+under a varGrp — no agreement). Once a composite:rank is modeled in registry
+with cross-tool fan-out + a blessed example, qwacback can re-enable.
+
+Action:
+1. Remove `rank` from qwacback's answer_type enum (DB migration; preserve any
+   historical rows by mapping them to a neutral fallback or flagging for review).
+2. Remove `rank` handling from `internal/converter/converter.go` (XLSForm→DDI)
+   and `internal/importer/importer.go` (DDI→XLSForm).
+3. Any incoming XLSForm row with `type=rank …` → reject with clear error
+   ("rank is not yet supported in the CDL pipeline; see registry archived/").
+4. Drop test cases covering rank.
+
 ### Hard rules
 
 - DO NOT modify `../survey-type-registry`. If a registry change is needed, file an issue there or open a PR upstream.

@@ -51,15 +51,6 @@ var TypeRegistry = map[string]TypeMapping{
         RoundTripSafe: true,
         DataColumns:   "1",
     },
-    "rank": {
-        XLSForm:       "rank",
-        LimeSurvey:    "R",
-        DDIIntrvl:     "discrete",
-        DDIFormatType: "numeric",
-        ResponseDomain: "category",
-        RoundTripSafe: true,
-        DataColumns:   "1",
-    },
     "calculate": {
         XLSForm:       "calculate",
         LimeSurvey:    "*",

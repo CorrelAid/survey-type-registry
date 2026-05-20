@@ -36,14 +36,6 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     limeSurveyType: "D",
     supported: true,
   },
-  rank: {
-    kind: "question",
-    limeSurveyType: "R",
-    supported: true,
-    supportsOther: true,
-    answerClass: "A",
-    requiresListName: true,
-  },
   calculate: {
     kind: "question",
     limeSurveyType: "*",

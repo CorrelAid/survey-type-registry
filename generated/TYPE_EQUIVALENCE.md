@@ -13,7 +13,6 @@ This document shows how question types map across different formats in the CDL s
 | `note` | `X` | `var[@intrvl='']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
 | `time` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
 | `datetime` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
-| `rank` | `R` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `calculate` | `*` | `var[@intrvl='discrete']` | ✅ | single-column | XPath expressions transpiled to ExpressionScript may not be fully equivalent |
 | `select_one_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
 | `select_multiple_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
@@ -132,26 +131,6 @@ This document shows how question types map across different formats in the CDL s
 
 **Warnings:**
 - ⚠️ Note questions don't collect data but are preserved in DDI
-
----
-
-### Rank Order (`rank`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `R`
-  - Answer class: `A`
-  - Supports 'other' option: ✅
-- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-- Choice codes: max 5 chars, pattern ``
-
-**Transformation:**
-- Round-trip safe: ✅ Yes
-- Lossless: ✅ Yes
-- Data columns: 1
-- Data structure: single-column
 
 ---
 
