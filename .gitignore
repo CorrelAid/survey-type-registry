@@ -1,4 +1,5 @@
 _xlsform2lstsv/
+.claude/
 __pycache__/
 *.pyc
 .venv/

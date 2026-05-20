@@ -1,12 +1,19 @@
 # DDI-Codebook 2.5 XML Schema files
 
-Used by `test_ddi_xml.py` to validate generated XML against the official schema.
+Official DDI-Codebook 2.5 XSDs + transitive dependencies. Used by:
+- `workers/schematron-worker/` (Java validator)
+- `tests/transformations/test_ddi_validation.py` (validates blessed example `ddi.xml` snapshots)
+- downstream consumers (qwacback, survey2ddi) via registry sync
 
-**Source:** [DDI-Codebook 2.5 specification](https://ddialliance.org/Specification/DDI-Codebook/2.5/) — XSD files downloaded from `https://ddialliance.org/hubfs/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd` and its dependencies.
+**Source:** [DDI-Codebook 2.5 specification](https://ddialliance.org/Specification/DDI-Codebook/2.5/). Files downloaded from `https://ddialliance.org/hubfs/Specification/DDI-Codebook/2.5/XMLSchema/` (entry: `codebook.xsd`).
 
-**Entry point:** `codebook.xsd` — this is the schema we validate against.
+**Entry point:** `codebook.xsd` — validate against this.
 
-Everything else is a transitive dependency:
-- `xml.xsd` — W3C XML namespace (xml:lang etc.)
-- `dcterms.xsd`, `dc.xsd`, `dcmitype.xsd` — Dublin Core metadata
-- `ddi-xhtml11*.xsd` + `XHTML/` — DDI's XHTML subset for rich text in elements
+## Transitive dependencies
+
+- `xml.xsd` — W3C XML namespace (`xml:lang` etc.)
+- `dc.xsd`, `dcterms.xsd`, `dcmitype.xsd` — Dublin Core metadata
+- `ddi-xhtml11.xsd` + `ddi-xhtml11-model-1.xsd` + `ddi-xhtml11-modules-1.xsd` — DDI's XHTML subset for rich-text fields
+- `XHTML/` — XHTML 1.1 modular schema (W3C). All files imported transitively by `ddi-xhtml11-modules-1.xsd`.
+
+Do NOT modify these files. To upgrade DDI-Codebook version: replace all files from the upstream zip, bump registry major version, re-bless example snapshots.
