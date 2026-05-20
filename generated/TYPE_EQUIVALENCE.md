@@ -9,116 +9,21 @@ This document shows how question types map across different formats in the CDL s
 
 | XLSForm | LimeSurvey | DDI | Round-trip Safe | Data Structure | Key Warnings |
 |---------|------------|-----|-----------------|----------------|--------------|
-| `integer` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
 | `decimal` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
-| `text` | `S` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `note` | `X` | `var[@intrvl='']` | ✅ | none | Note questions don't collect data but are preserved in DDI |
-| `date` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `time` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | LimeSurvey type D stores combined date+time; time-only granularity may be lost |
 | `datetime` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
-| `select_one` | `L` | `var[@intrvl='discrete']` | ✅ | single-column | Choice code truncation can cause ambiguity if two codes share 5-char prefix |
-| `select_multiple` | `M` | `varGrp[@type='multipleResp']` | ⚠️ | multiple-binary-columns | Data structure fundamentally changes during transformation |
 | `rank` | `R` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 | `calculate` | `*` | `var[@intrvl='discrete']` | ✅ | single-column | XPath expressions transpiled to ExpressionScript may not be fully equivalent |
-| `geopoint` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; xlsform2lstsv raises error |
-| `geotrace` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import |
-| `geoshape` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import |
-| `start-geopoint` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Background geolocation; not supported by LimeSurvey |
-| `image` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Media uploads not supported by LimeSurvey TSV import |
-| `audio` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Media uploads not supported by LimeSurvey TSV import |
-| `video` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Media uploads not supported by LimeSurvey TSV import |
-| `file` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | File uploads not supported by LimeSurvey TSV import |
-| `background-audio` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import |
-| `barcode` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import |
-| `phonenumber` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; use text with constraint regex |
-| `email` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | Not supported by LimeSurvey TSV import; use text with constraint regex |
-| `csv-external` | `None` | `var[@intrvl='']` | ⚠️ | unsupported | External CSV loading not supported by LimeSurvey TSV import |
-| `range` | `None` | `var[@intrvl='contin']` | ⚠️ | unsupported | Range/slider questions not supported by LimeSurvey TSV import |
-| `acknowledge` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | Acknowledge type not supported by LimeSurvey TSV import |
 | `select_one_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
 | `select_multiple_from_file` | `None` | `var[@intrvl='discrete']` | ⚠️ | unsupported | External file choice lists not supported by LimeSurvey TSV import |
+| `date` | `D` | `var[@intrvl='discrete']` | ✅ | single-column | — |
+| `integer` | `N` | `var[@intrvl='contin']` | ✅ | single-column | — |
+| `select_multiple` | `M` | `varGrp[@type='multipleResp']` | ⚠️ | multiple-binary-columns | Data structure fundamentally changes during transformation |
+| `select_one` | `L` | `var[@intrvl='discrete']` | ✅ | single-column | Choice code truncation can cause ambiguity if two codes share 5-char prefix |
+| `text` | `S` | `var[@intrvl='discrete']` | ✅ | single-column | — |
 
 ## Detailed Type Information
-
-### Acknowledge (`acknowledge`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl="discrete"`, `formatType="numeric"`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Acknowledge type not supported by LimeSurvey TSV import
-
----
-
-### Audio Recording (`audio`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Media uploads not supported by LimeSurvey TSV import
-
----
-
-### Background Audio Recording (`background-audio`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import
-
----
-
-### Barcode Scanner (`barcode`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import
-
----
 
 ### Calculated Field (`calculate`)
 
@@ -137,26 +42,6 @@ This document shows how question types map across different formats in the CDL s
 
 **Warnings:**
 - ⚠️ XPath expressions transpiled to ExpressionScript may not be fully equivalent
-
----
-
-### External CSV Reference (`csv-external`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ External CSV loading not supported by LimeSurvey TSV import
 
 ---
 
@@ -211,126 +96,6 @@ This document shows how question types map across different formats in the CDL s
 
 ---
 
-### Email Address (`email`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import; use text with constraint regex
-
----
-
-### File Upload (`file`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ File uploads not supported by LimeSurvey TSV import
-
----
-
-### Geopoint (Latitude/Longitude) (`geopoint`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import; xlsform2lstsv raises error
-
----
-
-### Geoshape (Polygon) (`geoshape`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import
-
----
-
-### Geotrace (Line) (`geotrace`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import
-
----
-
-### Image Upload (`image`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Media uploads not supported by LimeSurvey TSV import
-
----
-
 ### Integer (`integer`)
 
 **Aliases:** `int`
@@ -367,46 +132,6 @@ This document shows how question types map across different formats in the CDL s
 
 **Warnings:**
 - ⚠️ Note questions don't collect data but are preserved in DDI
-
----
-
-### Phone Number (`phonenumber`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Not supported by LimeSurvey TSV import; use text with constraint regex
-
----
-
-### Range (Slider) (`range`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl="contin"`, `formatType="numeric"`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Range/slider questions not supported by LimeSurvey TSV import
 
 ---
 
@@ -525,26 +250,6 @@ This document shows how question types map across different formats in the CDL s
 
 ---
 
-### Start Geopoint (`start-geopoint`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Background geolocation; not supported by LimeSurvey
-
----
-
 ### Text (Short Free Text) (`text`)
 
 **Aliases:** `string`
@@ -581,26 +286,6 @@ This document shows how question types map across different formats in the CDL s
 
 **Warnings:**
 - ⚠️ LimeSurvey type D stores combined date+time; time-only granularity may be lost
-
----
-
-### Video Recording (`video`)
-
-**Platform Mappings:**
-- **LimeSurvey:** Type `None`
-- **DDI:** `intrvl=""`, `formatType=""`
-
-**Constraints:**
-- Variable name: max 20 chars, pattern `^[a-zA-Z0-9]+$`
-
-**Transformation:**
-- Round-trip safe: ⚠️ No
-- Lossless: ⚠️ No
-- Data columns: 0
-- Data structure: unsupported
-
-**Warnings:**
-- ⚠️ Media uploads not supported by LimeSurvey TSV import
 
 ---
 

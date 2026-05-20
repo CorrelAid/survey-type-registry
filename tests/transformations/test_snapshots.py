@@ -32,9 +32,16 @@ from .fixtures import (
 )
 
 
+_PRODDATE_RE = __import__("re").compile(r'<prodDate date="\d{4}-\d{2}-\d{2}">\d{4}-\d{2}-\d{2}</prodDate>')
+
+
 def _canon_xml(xml_str: str) -> str:
-    """Whitespace + attribute-order-normalized XML for snapshot diffing."""
-    return ET.canonicalize(xml_str)
+    """Whitespace + attribute-order-normalized XML for snapshot diffing.
+
+    Scrubs <prodDate> (build-time wallclock) to keep diffs meaningful.
+    """
+    scrubbed = _PRODDATE_RE.sub('<prodDate date="SCRUBBED">SCRUBBED</prodDate>', xml_str)
+    return ET.canonicalize(scrubbed)
 
 
 def _safe(fn, *args, **kwargs):

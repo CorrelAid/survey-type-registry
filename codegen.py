@@ -29,13 +29,36 @@ def _slug(at_id: str) -> str:
     return at_id.split(":", 1)[1] if ":" in at_id else at_id
 
 def load_registry(path: Path) -> dict[str, Any]:
-    """Load and parse JSON-LD registry. Keyed by full @id to avoid namespace collision."""
+    """Load and parse JSON-LD registry. Keyed by full @id to avoid namespace collision.
+
+    Aggregates:
+    - <path> (main survey-types.jsonld) — conventions, vocabs, structural,
+      metadata, non-blessed QuestionTypes, PresentationVariants, Appearances
+    - types/<id>/definition.jsonld — blessed QuestionTypes (v1)
+
+    Archived entries (archived/*.jsonld) are NOT loaded — generated/ excludes them.
+    """
+    registry: dict[str, Any] = {}
+
     with open(path) as f:
         data = json.load(f)
-
-    registry = {}
     for item in data.get("@graph", []):
         registry[item["@id"]] = item
+
+    # Walk types/*/definition.jsonld
+    types_dir = path.parent / "types"
+    if types_dir.exists():
+        for definition in sorted(types_dir.glob("*/definition.jsonld")):
+            with open(definition) as f:
+                tdata = json.load(f)
+            for item in tdata.get("@graph", []):
+                if item["@id"] in registry:
+                    raise ValueError(
+                        f"Duplicate @id {item['@id']!r}: defined in both "
+                        f"{path} and {definition}"
+                    )
+                registry[item["@id"]] = item
+
     return registry
 
 def generate_typescript(registry: dict[str, Any], output: Path):

@@ -6,49 +6,6 @@
   },
   "@graph": [
     {
-      "@id": "type:integer",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Integer",
-      "xlsform": {
-        "typeString": "integer",
-        "aliases": [
-          "int"
-        ]
-      },
-      "limesurvey": {
-        "typeCode": "N",
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "ddi": {
-        "intrvl": "contin",
-        "formatType": "numeric",
-        "responseDomainType": "numeric"
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$",
-        "validationMessage": "Variable names must be alphanumeric, max 20 chars"
-      },
-      "transformation": {
-        "roundTripSafe": true,
-        "lossless": true,
-        "dataColumns": 1,
-        "dataStructure": "single-column"
-      },
-      "concept": {
-        "openness": "open",
-        "cardinality": "single",
-        "dataNature": "numeric"
-      },
-      "qwacback": {
-        "answerType": "integer"
-      }
-    },
-    {
       "@id": "type:decimal",
       "@type": "QuestionType",
       "skos:prefLabel": "Decimal/Float",
@@ -88,48 +45,6 @@
       }
     },
     {
-      "@id": "type:text",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Text (Short Free Text)",
-      "xlsform": {
-        "typeString": "text",
-        "aliases": [
-          "string"
-        ]
-      },
-      "limesurvey": {
-        "typeCode": "S",
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "character",
-        "responseDomainType": "text"
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": true,
-        "lossless": true,
-        "dataColumns": 1,
-        "dataStructure": "single-column"
-      },
-      "concept": {
-        "openness": "open",
-        "cardinality": "single",
-        "dataNature": "text"
-      },
-      "qwacback": {
-        "answerType": "text"
-      }
-    },
-    {
       "@id": "type:note",
       "@type": "QuestionType",
       "skos:prefLabel": "Note (Display Text)",
@@ -161,45 +76,6 @@
         "openness": "none",
         "cardinality": "none",
         "dataNature": "none"
-      }
-    },
-    {
-      "@id": "type:date",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Date",
-      "xlsform": {
-        "typeString": "date"
-      },
-      "limesurvey": {
-        "typeCode": "D",
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "character",
-        "responseDomainType": "text"
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": true,
-        "lossless": true,
-        "dataColumns": 1,
-        "dataStructure": "single-column"
-      },
-      "concept": {
-        "openness": "open",
-        "cardinality": "single",
-        "dataNature": "temporal"
-      },
-      "qwacback": {
-        "answerType": "text"
       }
     },
     {
@@ -281,121 +157,6 @@
       },
       "qwacback": {
         "answerType": "text"
-      }
-    },
-    {
-      "@id": "type:select_one",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Single Choice (Radio Buttons)",
-      "xlsform": {
-        "typeString": "select_one",
-        "requiresListName": true
-      },
-      "limesurvey": {
-        "typeCode": "L",
-        "supportsOther": true,
-        "answerClass": "A"
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "numeric",
-        "responseDomainType": "category"
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$",
-        "maxChoiceCodeLength": 5,
-        "choiceCodePattern": "^[a-zA-Z0-9]+$",
-        "warnings": [
-          "Choice codes > 5 chars will be truncated in LimeSurvey"
-        ]
-      },
-      "transformation": {
-        "roundTripSafe": true,
-        "lossless": true,
-        "dataColumns": 1,
-        "dataStructure": "single-column",
-        "warnings": [
-          "Choice code truncation can cause ambiguity if two codes share 5-char prefix"
-        ]
-      },
-      "concept": {
-        "openness": "closed",
-        "cardinality": "single",
-        "dataNature": "categorical"
-      },
-      "qwacback": {
-        "answerType": "single_choice"
-      }
-    },
-    {
-      "@id": "type:select_multiple",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Multiple Choice (Checkboxes)",
-      "xlsform": {
-        "typeString": "select_multiple",
-        "requiresListName": true
-      },
-      "limesurvey": {
-        "typeCode": "M",
-        "supportsOther": true,
-        "answerClass": "SQ"
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "numeric",
-        "responseDomainType": "multiple",
-        "structure": {
-          "element": "varGrp",
-          "type": "multipleResp",
-          "memberVars": "binary-per-choice"
-        }
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$",
-        "maxChoiceCodeLength": 5,
-        "choiceCodePattern": "^[a-zA-Z0-9]+$",
-        "warnings": [
-          "Choice codes > 5 chars will be truncated in LimeSurvey",
-          "Avoid choice codes with identical 5-char prefixes"
-        ]
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": "n-choices",
-        "dataStructure": "multiple-binary-columns",
-        "structureChanges": [
-          {
-            "from": "XLSForm",
-            "to": "DDI",
-            "change": "Single question → varGrp with binary child variables"
-          },
-          {
-            "from": "Survey Data",
-            "to": "DDI CSV",
-            "change": "Space-separated values → separate binary columns"
-          }
-        ],
-        "warnings": [
-          "Data structure fundamentally changes during transformation",
-          "Original column contains space-separated codes; DDI exports n binary columns"
-        ]
-      },
-      "concept": {
-        "openness": "closed",
-        "cardinality": "multiple",
-        "dataNature": "categorical"
-      },
-      "qwacback": {
-        "answerType": "multiple_choice"
       }
     },
     {
@@ -589,466 +350,6 @@
         "lossless": false,
         "dataColumns": 0,
         "dataStructure": "nested-arrays-not-supported"
-      }
-    },
-    {
-      "@id": "type:geopoint",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Geopoint (Latitude/Longitude)",
-      "xlsform": {
-        "typeString": "geopoint"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import; xlsform2lstsv raises error"
-        ]
-      }
-    },
-    {
-      "@id": "type:geotrace",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Geotrace (Line)",
-      "xlsform": {
-        "typeString": "geotrace"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:geoshape",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Geoshape (Polygon)",
-      "xlsform": {
-        "typeString": "geoshape"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:start-geopoint",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Start Geopoint",
-      "xlsform": {
-        "typeString": "start-geopoint"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Background geolocation; not supported by LimeSurvey"
-        ]
-      }
-    },
-    {
-      "@id": "type:image",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Image Upload",
-      "xlsform": {
-        "typeString": "image"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Media uploads not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:audio",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Audio Recording",
-      "xlsform": {
-        "typeString": "audio"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Media uploads not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:video",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Video Recording",
-      "xlsform": {
-        "typeString": "video"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Media uploads not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:file",
-      "@type": "QuestionType",
-      "skos:prefLabel": "File Upload",
-      "xlsform": {
-        "typeString": "file"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "File uploads not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:background-audio",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Background Audio Recording",
-      "xlsform": {
-        "typeString": "background-audio"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:barcode",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Barcode Scanner",
-      "xlsform": {
-        "typeString": "barcode"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:phonenumber",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Phone Number",
-      "xlsform": {
-        "typeString": "phonenumber"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import; use text with constraint regex"
-        ]
-      }
-    },
-    {
-      "@id": "type:email",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Email Address",
-      "xlsform": {
-        "typeString": "email"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Not supported by LimeSurvey TSV import; use text with constraint regex"
-        ]
-      }
-    },
-    {
-      "@id": "type:csv-external",
-      "@type": "QuestionType",
-      "skos:prefLabel": "External CSV Reference",
-      "xlsform": {
-        "typeString": "csv-external"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "External CSV loading not supported by LimeSurvey TSV import"
-        ]
-      }
-    },
-    {
-      "@id": "type:range",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Range (Slider)",
-      "xlsform": {
-        "typeString": "range"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Range/slider questions not supported by LimeSurvey TSV import"
-        ]
-      },
-      "ddi": {
-        "intrvl": "contin",
-        "formatType": "numeric",
-        "responseDomainType": "numeric"
-      }
-    },
-    {
-      "@id": "type:acknowledge",
-      "@type": "QuestionType",
-      "skos:prefLabel": "Acknowledge",
-      "xlsform": {
-        "typeString": "acknowledge"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "supported": false,
-        "supportsOther": false,
-        "answerClass": null
-      },
-      "kobo": {
-        "nativeSupport": true
-      },
-      "constraints": {
-        "maxNameLength": 20,
-        "namePattern": "^[a-zA-Z0-9]+$"
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "unsupported",
-        "warnings": [
-          "Acknowledge type not supported by LimeSurvey TSV import"
-        ]
-      },
-      "ddi": {
-        "intrvl": "discrete",
-        "formatType": "numeric",
-        "responseDomainType": "text"
       }
     },
     {
@@ -1300,8 +601,8 @@
         "answerType": "single_choice",
         "exampleId": "single_choice"
       },
-      "examplePath": "examples/single_choice/xlsform.json",
-      "exampleDir": "examples/single_choice"
+      "examplePath": "types/select_one/examples/single_choice/xlsform.json",
+      "exampleDir": "types/select_one/examples/single_choice"
     },
     {
       "@id": "variant:multiple_choice",
@@ -1323,8 +624,8 @@
         "answerType": "multiple_choice",
         "exampleId": "multiple_choice"
       },
-      "examplePath": "examples/multiple_choice/xlsform.json",
-      "exampleDir": "examples/multiple_choice"
+      "examplePath": "types/select_multiple/examples/multiple_choice/xlsform.json",
+      "exampleDir": "types/select_multiple/examples/multiple_choice"
     },
     {
       "@id": "variant:single_choice_other",
@@ -1346,8 +647,8 @@
         "answerType": "single_choice",
         "exampleId": "single_choice_other"
       },
-      "examplePath": "examples/single_choice_other/xlsform.json",
-      "exampleDir": "examples/single_choice_other"
+      "examplePath": "types/select_one/examples/single_choice_other/xlsform.json",
+      "exampleDir": "types/select_one/examples/single_choice_other"
     },
     {
       "@id": "variant:multiple_choice_other",
@@ -1369,8 +670,8 @@
         "answerType": "multiple_choice",
         "exampleId": "multiple_choice_other"
       },
-      "examplePath": "examples/multiple_choice_other/xlsform.json",
-      "exampleDir": "examples/multiple_choice_other"
+      "examplePath": "types/select_multiple/examples/multiple_choice_other/xlsform.json",
+      "exampleDir": "types/select_multiple/examples/multiple_choice_other"
     },
     {
       "@id": "variant:single_choice_long_list",
@@ -1393,8 +694,8 @@
         "answerType": "single_choice",
         "exampleId": "single_choice_long_list"
       },
-      "examplePath": "examples/single_choice_long_list/xlsform.json",
-      "exampleDir": "examples/single_choice_long_list"
+      "examplePath": "types/select_one/examples/single_choice_long_list/xlsform.json",
+      "exampleDir": "types/select_one/examples/single_choice_long_list"
     },
     {
       "@id": "variant:multiple_choice_long_list",
@@ -1417,8 +718,8 @@
         "answerType": "multiple_choice",
         "exampleId": "multiple_choice_long_list"
       },
-      "examplePath": "examples/multiple_choice_long_list/xlsform.json",
-      "exampleDir": "examples/multiple_choice_long_list"
+      "examplePath": "types/select_multiple/examples/multiple_choice_long_list/xlsform.json",
+      "exampleDir": "types/select_multiple/examples/multiple_choice_long_list"
     },
     {
       "@id": "variant:grid",
@@ -1464,8 +765,8 @@
         "answerType": "integer",
         "exampleId": "integer"
       },
-      "examplePath": "examples/integer/xlsform.json",
-      "exampleDir": "examples/integer"
+      "examplePath": "types/integer/examples/integer/xlsform.json",
+      "exampleDir": "types/integer/examples/integer"
     },
     {
       "@id": "variant:text",
@@ -1487,8 +788,8 @@
         "answerType": "text",
         "exampleId": "text"
       },
-      "examplePath": "examples/text/xlsform.json",
-      "exampleDir": "examples/text"
+      "examplePath": "types/text/examples/text/xlsform.json",
+      "exampleDir": "types/text/examples/text"
     },
     {
       "@id": "appearance:minimal",

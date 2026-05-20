@@ -1,0 +1,59 @@
+{
+  "@context": {
+    "@vocab": "https://civic-data.de/survey/",
+    "skos": "http://www.w3.org/2004/02/skos/core#"
+  },
+  "@graph": [
+    {
+      "@id": "type:integer",
+      "@type": "QuestionType",
+      "skos:prefLabel": "Integer",
+      "xlsform": {
+        "typeString": "integer",
+        "aliases": [
+          "int"
+        ]
+      },
+      "limesurvey": {
+        "typeCode": "N",
+        "supportsOther": false,
+        "answerClass": null
+      },
+      "ddi": {
+        "intrvl": "contin",
+        "formatType": "numeric",
+        "responseDomainType": "numeric"
+      },
+      "kobo": {
+        "nativeSupport": true
+      },
+      "constraints": {
+        "maxNameLength": 20,
+        "namePattern": "^[a-zA-Z0-9]+$",
+        "validationMessage": "Variable names must be alphanumeric, max 20 chars"
+      },
+      "transformation": {
+        "roundTripSafe": true,
+        "lossless": true,
+        "dataColumns": 1,
+        "dataStructure": "single-column"
+      },
+      "concept": {
+        "openness": "open",
+        "cardinality": "single",
+        "dataNature": "numeric"
+      },
+      "qwacback": {
+        "answerType": "integer"
+      },
+      "tier": "v1-blessed",
+      "frozenSince": "2026-05-20",
+      "variants": [
+        "variant:integer"
+      ],
+      "tests": [
+        "tests/types/integer/"
+      ]
+    }
+  ]
+}

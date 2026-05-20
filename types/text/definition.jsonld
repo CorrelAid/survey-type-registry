@@ -1,0 +1,58 @@
+{
+  "@context": {
+    "@vocab": "https://civic-data.de/survey/",
+    "skos": "http://www.w3.org/2004/02/skos/core#"
+  },
+  "@graph": [
+    {
+      "@id": "type:text",
+      "@type": "QuestionType",
+      "skos:prefLabel": "Text (Short Free Text)",
+      "xlsform": {
+        "typeString": "text",
+        "aliases": [
+          "string"
+        ]
+      },
+      "limesurvey": {
+        "typeCode": "S",
+        "supportsOther": false,
+        "answerClass": null
+      },
+      "ddi": {
+        "intrvl": "discrete",
+        "formatType": "character",
+        "responseDomainType": "text"
+      },
+      "kobo": {
+        "nativeSupport": true
+      },
+      "constraints": {
+        "maxNameLength": 20,
+        "namePattern": "^[a-zA-Z0-9]+$"
+      },
+      "transformation": {
+        "roundTripSafe": true,
+        "lossless": true,
+        "dataColumns": 1,
+        "dataStructure": "single-column"
+      },
+      "concept": {
+        "openness": "open",
+        "cardinality": "single",
+        "dataNature": "text"
+      },
+      "qwacback": {
+        "answerType": "text"
+      },
+      "tier": "v1-blessed",
+      "frozenSince": "2026-05-20",
+      "variants": [
+        "variant:text"
+      ],
+      "tests": [
+        "tests/types/text/"
+      ]
+    }
+  ]
+}

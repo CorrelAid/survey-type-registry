@@ -16,39 +16,14 @@ export interface TypeMapping {
 }
 
 export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
-  integer: {
-    kind: "question",
-    limeSurveyType: "N",
-    supported: true,
-  },
-  int: {
-    kind: "question",
-    limeSurveyType: "N",
-    supported: true,
-  },
   decimal: {
     kind: "question",
     limeSurveyType: "N",
     supported: true,
   },
-  text: {
-    kind: "question",
-    limeSurveyType: "S",
-    supported: true,
-  },
-  string: {
-    kind: "question",
-    limeSurveyType: "S",
-    supported: true,
-  },
   note: {
     kind: "question",
     limeSurveyType: "X",
-    supported: true,
-  },
-  date: {
-    kind: "question",
-    limeSurveyType: "D",
     supported: true,
   },
   time: {
@@ -60,22 +35,6 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     kind: "question",
     limeSurveyType: "D",
     supported: true,
-  },
-  select_one: {
-    kind: "question",
-    limeSurveyType: "L",
-    supported: true,
-    supportsOther: true,
-    answerClass: "A",
-    requiresListName: true,
-  },
-  select_multiple: {
-    kind: "question",
-    limeSurveyType: "M",
-    supported: true,
-    supportsOther: true,
-    answerClass: "SQ",
-    requiresListName: true,
   },
   rank: {
     kind: "question",
@@ -107,81 +66,6 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
   },
   end_repeat: {
     kind: "structural",
-    limeSurveyType: null,
-    supported: false,
-  },
-  geopoint: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  geotrace: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  geoshape: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  "start-geopoint": {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  image: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  audio: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  video: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  file: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  "background-audio": {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  barcode: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  phonenumber: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  email: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  "csv-external": {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  range: {
-    kind: "question",
-    limeSurveyType: null,
-    supported: false,
-  },
-  acknowledge: {
-    kind: "question",
     limeSurveyType: null,
     supported: false,
   },
@@ -231,5 +115,46 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     kind: "metadata",
     limeSurveyType: null,
     supported: false,
+  },
+  date: {
+    kind: "question",
+    limeSurveyType: "D",
+    supported: true,
+  },
+  integer: {
+    kind: "question",
+    limeSurveyType: "N",
+    supported: true,
+  },
+  int: {
+    kind: "question",
+    limeSurveyType: "N",
+    supported: true,
+  },
+  select_multiple: {
+    kind: "question",
+    limeSurveyType: "M",
+    supported: true,
+    supportsOther: true,
+    answerClass: "SQ",
+    requiresListName: true,
+  },
+  select_one: {
+    kind: "question",
+    limeSurveyType: "L",
+    supported: true,
+    supportsOther: true,
+    answerClass: "A",
+    requiresListName: true,
+  },
+  text: {
+    kind: "question",
+    limeSurveyType: "S",
+    supported: true,
+  },
+  string: {
+    kind: "question",
+    limeSurveyType: "S",
+    supported: true,
   },
 };
