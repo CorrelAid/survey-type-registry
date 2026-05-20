@@ -737,7 +737,7 @@ def generate_type_docs(registry: dict[str, Any], base_dir: Path) -> int:
     """
     blessed = [
         e for e in registry.values()
-        if e.get("@type") == "QuestionType" and e.get("tier") == "v1-blessed"
+        if e.get("tier") == "v1-blessed"
     ]
 
     # Build lookup: PresentationVariant by @id for variants[] resolution

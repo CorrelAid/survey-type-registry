@@ -49,11 +49,6 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
     limeSurveyType: "*",
     supported: true,
   },
-  begin_group: {
-    kind: "structural",
-    limeSurveyType: null,
-    supported: false,
-  },
   begin_repeat: {
     kind: "structural",
     limeSurveyType: null,
@@ -113,6 +108,11 @@ export const TYPE_MAPPINGS: Record<string, TypeMapping> = {
   },
   audit: {
     kind: "metadata",
+    limeSurveyType: null,
+    supported: false,
+  },
+  begin_group: {
+    kind: "structural",
     limeSurveyType: null,
     supported: false,
   },

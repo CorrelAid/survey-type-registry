@@ -237,43 +237,6 @@
       }
     },
     {
-      "@id": "type:begin_group",
-      "@type": "StructuralType",
-      "skos:prefLabel": "Group (Begin)",
-      "xlsform": {
-        "typeString": "begin_group"
-      },
-      "limesurvey": {
-        "typeCode": null,
-        "emitsGroupRow": true,
-        "supportsNesting": false
-      },
-      "ddi": {
-        "preservation": "conditional",
-        "conditions": [
-          {
-            "if": "appearance='table-list' OR name contains 'grid' OR label contains 'matrix'",
-            "then": "varGrp[@type='grid']"
-          },
-          {
-            "if": "else",
-            "then": "DROPPED - variables flattened to top level"
-          }
-        ]
-      },
-      "transformation": {
-        "roundTripSafe": false,
-        "lossless": false,
-        "dataColumns": 0,
-        "dataStructure": "none",
-        "warnings": [
-          "Plain groups lost in XLSForm → DDI → XLSForm round trip",
-          "Always use appearance='table-list' if group structure matters",
-          "Nested groups flattened in LimeSurvey (not supported)"
-        ]
-      }
-    },
-    {
       "@id": "type:begin_repeat",
       "@type": "StructuralType",
       "skos:prefLabel": "Repeat Group",
@@ -742,8 +705,8 @@
         "answerType": "grid",
         "exampleId": "grid"
       },
-      "examplePath": "examples/grid/xlsform.json",
-      "exampleDir": "examples/grid"
+      "examplePath": "types/begin_group/examples/grid/xlsform.json",
+      "exampleDir": "types/begin_group/examples/grid"
     },
     {
       "@id": "variant:integer",

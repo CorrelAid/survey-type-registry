@@ -51,10 +51,10 @@ NON_DDI_EMITTABLE_TYPES: set[str] = {
 
 # Structural types (begin_group, end_group, begin_repeat, end_repeat)
 STRUCTURAL_TYPES: set[str] = {
-    "begin_group",
     "begin_repeat",
     "end_group",
     "end_repeat",
+    "begin_group",
 }
 
 # Standardized type → (intrvl, format_type). Filter: DDI-emittable (has ddi.intrvl).
