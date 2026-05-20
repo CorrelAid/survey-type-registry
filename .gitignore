@@ -8,3 +8,5 @@ dist/
 *.egg-info/
 workers/schematron-worker/build/
 workers/schematron-worker/.gradle/
+site/node_modules/
+site/dist/
